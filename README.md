@@ -33,7 +33,7 @@ Notion links open in Firefox, and everything else still asks you. Pure control, 
 ## Showcases
 
 <p align="center">
-  <img width="1200" alt="demo" src="https://github.com/user-attachments/assets/41200cfe-0dec-4701-82e4-3fe04bdd8bb8" />
+ <img width="1200" alt="demo" src="https://github.com/user-attachments/assets/d5c94fe2-2d68-44fb-98e5-14a478e10a97" />
 </p>
 
 ## Features

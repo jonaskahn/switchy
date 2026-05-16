@@ -1,0 +1,12 @@
+# ── Script logs & temp output ──────────────────────────────────────────────────
+*.log
+*.tmp
+*.temp
+
+# ── Installer artifacts (produced by build.ps1, not source) ───────────────────
+*.exe
+*.msi
+
+# ── OS ─────────────────────────────────────────────────────────────────────────
+Thumbs.db
+desktop.ini

@@ -1,0 +1,2985 @@
+{
+  "version": "1.0.0",
+  "project": {
+    "name": "Switchy",
+    "languages": [
+      "css",
+      "go",
+      "html",
+      "javascript",
+      "json",
+      "makefile",
+      "markdown",
+      "mod",
+      "powershell",
+      "sum",
+      "txt",
+      "typescript",
+      "unknown",
+      "vue",
+      "yaml"
+    ],
+    "frameworks": [
+      "Go",
+      "Tailwind CSS",
+      "Vite",
+      "Vue",
+      "Wails"
+    ],
+    "description": "A lightning-fast Windows browser picker that intercepts links and routes them to your choice of browser with zero friction using Wails, Vue 3, and Go.",
+    "analyzedAt": "2026-05-16T09:41:39.888093+00:00Z",
+    "gitCommitHash": "e30e2f049f9797ee02b88c1412eb6da38e434cc8"
+  },
+  "nodes": [
+    {
+      "id": "file:app.go",
+      "type": "file",
+      "name": "app.go",
+      "filePath": "app.go",
+      "summary": "Core application controller that manages the Wails app lifecycle, URL handling, browser selection, and window management for both selector and settings modes.",
+      "tags": [
+        "entry-point",
+        "app-controller",
+        "window-management",
+        "browser-launcher"
+      ],
+      "complexity": "complex",
+      "languageNotes": "Exports the App struct with 27 public methods handling Wails runtime integration, window manipulation via Windows API, and cross-UI communication."
+    },
+    {
+      "id": "file:main.go",
+      "type": "file",
+      "name": "main.go",
+      "filePath": "main.go",
+      "summary": "Program entry point that handles command-line arguments for register/unregister operations, settings management, and URL selector modes with automatic rule matching.",
+      "tags": [
+        "entry-point",
+        "cli-dispatcher",
+        "mode-router",
+        "bootstrap"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:docs/CONVENTIONS.md",
+      "type": "document",
+      "name": "CONVENTIONS.md",
+      "filePath": "docs/CONVENTIONS.md",
+      "summary": "Project coding standards and conventions covering safety practices, naming conventions, error handling, and code organization for Go development within Switchy.",
+      "tags": [
+        "documentation",
+        "development-guide",
+        "standards",
+        "best-practices"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:go.mod",
+      "type": "file",
+      "name": "go.mod",
+      "filePath": "go.mod",
+      "summary": "Go module definition specifying project dependencies including Wails framework, Windows system calls, and utility packages.",
+      "tags": [
+        "config",
+        "dependency-management",
+        "module-definition"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:go.sum",
+      "type": "file",
+      "name": "go.sum",
+      "filePath": "go.sum",
+      "summary": "Dependency checksums ensuring reproducible builds by locking all transitive dependency versions.",
+      "tags": [
+        "config",
+        "dependency-checksums",
+        "build-integrity"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:internal/browser/icon_windows.go",
+      "type": "file",
+      "name": "icon_windows.go",
+      "filePath": "internal/browser/icon_windows.go",
+      "summary": "Windows-specific browser icon extraction from executable files using Windows API calls to retrieve application icons for UI display.",
+      "tags": [
+        "windows-api",
+        "icon-extraction",
+        "ui-asset"
+      ],
+      "complexity": "complex",
+      "languageNotes": "Heavy use of unsafe pointers and Windows API calls via syscall for icon resource enumeration and DLL manipulation."
+    },
+    {
+      "id": "file:internal/browser/launch.go",
+      "type": "file",
+      "name": "launch.go",
+      "filePath": "internal/browser/launch.go",
+      "summary": "Cross-platform browser launching logic that handles URL opening with configurable launch arguments, supports both traditional executables and UWP apps.",
+      "tags": [
+        "browser-launcher",
+        "process-spawning",
+        "launch-configuration",
+        "url-handling"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:internal/config/service.go",
+      "type": "file",
+      "name": "service.go",
+      "filePath": "internal/config/service.go",
+      "summary": "Settings persistence service providing load/save operations for user configuration with automatic default values and file serialization.",
+      "tags": [
+        "config-service",
+        "persistence",
+        "serialization",
+        "file-io"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:internal/config/types.go",
+      "type": "file",
+      "name": "types.go",
+      "filePath": "internal/config/types.go",
+      "summary": "Configuration data structures defining Browser, Rule, Ruleset, AppSettings, and UserSettings types with JSON serialization support.",
+      "tags": [
+        "data-model",
+        "type-definition",
+        "schema",
+        "configuration"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:internal/dwm/backdrop.go",
+      "type": "file",
+      "name": "backdrop.go",
+      "filePath": "internal/dwm/backdrop.go",
+      "summary": "Platform-independent interface for Windows DWM backdrop type selection (Mica, Acrylic).",
+      "tags": [
+        "windows-api",
+        "ui-theming",
+        "abstraction"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:internal/dwm/backdrop_windows.go",
+      "type": "file",
+      "name": "backdrop_windows.go",
+      "filePath": "internal/dwm/backdrop_windows.go",
+      "summary": "Windows-specific implementation of DWM backdrop effects using Windows API calls for Mica and Acrylic material application.",
+      "tags": [
+        "windows-api",
+        "dwm-effects",
+        "platform-specific"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:internal/ipc/pipe.go",
+      "type": "file",
+      "name": "pipe.go",
+      "filePath": "internal/ipc/pipe.go",
+      "summary": "Inter-process communication via named pipes for forwarding URLs between multiple Switchy instances and listening for new URL requests.",
+      "tags": [
+        "ipc",
+        "named-pipes",
+        "process-communication",
+        "windows-api"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:internal/logger/logger.go",
+      "type": "file",
+      "name": "logger.go",
+      "filePath": "internal/logger/logger.go",
+      "summary": "Structured logging service providing debug, info, warn, and error levels with file-based output for debugging and troubleshooting.",
+      "tags": [
+        "logging",
+        "observability",
+        "debug-support",
+        "utility"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:app.go:App",
+      "type": "class",
+      "name": "App",
+      "filePath": "app.go",
+      "lineRange": [
+        21,
+        26
+      ],
+      "summary": "Primary application controller struct managing Wails context, URL state, and browser operations with mutex-protected concurrent access.",
+      "tags": [
+        "app-controller",
+        "state-management",
+        "wails-binding"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "class:app.go:WindowPos",
+      "type": "class",
+      "name": "WindowPos",
+      "filePath": "app.go",
+      "lineRange": [
+        176,
+        179
+      ],
+      "summary": "Simple data structure representing a window's X and Y coordinates.",
+      "tags": [
+        "data-structure",
+        "geometry"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:app.go:WindowSize",
+      "type": "class",
+      "name": "WindowSize",
+      "filePath": "app.go",
+      "lineRange": [
+        181,
+        184
+      ],
+      "summary": "Simple data structure representing window dimensions with width and height values.",
+      "tags": [
+        "data-structure",
+        "geometry"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:app.go:WorkArea",
+      "type": "class",
+      "name": "WorkArea",
+      "filePath": "app.go",
+      "lineRange": [
+        186,
+        191
+      ],
+      "summary": "Data structure representing the usable screen area with position and dimensions for window positioning calculations.",
+      "tags": [
+        "data-structure",
+        "geometry",
+        "monitor-info"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:app.go:NewApp",
+      "type": "function",
+      "name": "NewApp",
+      "filePath": "app.go",
+      "lineRange": [
+        28,
+        30
+      ],
+      "summary": "Factory function that creates and returns a new App instance with the specified mode and raw URL.",
+      "tags": [
+        "constructor",
+        "factory"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:app.go:GetSettings",
+      "type": "function",
+      "name": "GetSettings",
+      "filePath": "app.go",
+      "lineRange": [
+        51,
+        61
+      ],
+      "summary": "Loads and returns the current user settings from disk with filtering for legacy Internet Explorer browser.",
+      "tags": [
+        "config-loader",
+        "ui-binding"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:app.go:GetBrowsers",
+      "type": "function",
+      "name": "GetBrowsers",
+      "filePath": "app.go",
+      "lineRange": [
+        82,
+        95
+      ],
+      "summary": "Returns the list of visible browsers available for selection, filtering out hidden entries and legacy browsers.",
+      "tags": [
+        "browser-list",
+        "filtering",
+        "ui-binding"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:app.go:OpenWithBrowser",
+      "type": "function",
+      "name": "OpenWithBrowser",
+      "filePath": "app.go",
+      "lineRange": [
+        97,
+        117
+      ],
+      "summary": "Opens the current URL with the specified browser and handles window visibility management.",
+      "tags": [
+        "browser-launcher",
+        "ui-binding",
+        "process-management"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:app.go:OpenWithAlternate",
+      "type": "function",
+      "name": "OpenWithAlternate",
+      "filePath": "app.go",
+      "lineRange": [
+        119,
+        134
+      ],
+      "summary": "Opens the current URL with a browser's alternate launch configuration profile.",
+      "tags": [
+        "browser-launcher",
+        "ui-binding",
+        "alternate-profile"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:app.go:ResizeSelector",
+      "type": "function",
+      "name": "ResizeSelector",
+      "filePath": "app.go",
+      "lineRange": [
+        144,
+        174
+      ],
+      "summary": "Resizes the selector window and recenters it on the screen, handling monitor detection and dimension validation.",
+      "tags": [
+        "window-management",
+        "ui-binding",
+        "geometry"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:app.go:GetWorkArea",
+      "type": "function",
+      "name": "GetWorkArea",
+      "filePath": "app.go",
+      "lineRange": [
+        193,
+        207
+      ],
+      "summary": "Retrieves the usable screen work area dimensions from the Windows display monitor.",
+      "tags": [
+        "windows-api",
+        "monitor-info",
+        "ui-binding"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:app.go:OpenSettings",
+      "type": "function",
+      "name": "OpenSettings",
+      "filePath": "app.go",
+      "lineRange": [
+        225,
+        231
+      ],
+      "summary": "Launches the Switchy settings window as a subprocess.",
+      "tags": [
+        "ui-launcher",
+        "subprocess",
+        "ui-binding"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:app.go:DetectBrowsers",
+      "type": "function",
+      "name": "DetectBrowsers",
+      "filePath": "app.go",
+      "lineRange": [
+        245,
+        247
+      ],
+      "summary": "Triggers browser detection and updates the settings with newly found browsers.",
+      "tags": [
+        "browser-detection",
+        "config-update",
+        "ui-binding"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:main.go:main",
+      "type": "function",
+      "name": "main",
+      "filePath": "main.go",
+      "lineRange": [
+        28,
+        49
+      ],
+      "summary": "Program entry point that parses command-line arguments and dispatches to register, settings, or selector modes.",
+      "tags": [
+        "entry-point",
+        "cli-dispatcher"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:main.go:runSelector",
+      "type": "function",
+      "name": "runSelector",
+      "filePath": "main.go",
+      "lineRange": [
+        69,
+        106
+      ],
+      "summary": "Initializes and runs the browser selector UI with IPC listening and automatic URL rule matching.",
+      "tags": [
+        "ui-launcher",
+        "ipc-listener",
+        "rule-engine",
+        "wails-app"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:main.go:runSettings",
+      "type": "function",
+      "name": "runSettings",
+      "filePath": "main.go",
+      "lineRange": [
+        108,
+        122
+      ],
+      "summary": "Initializes and runs the settings configuration UI window.",
+      "tags": [
+        "ui-launcher",
+        "wails-app",
+        "settings"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:main.go:baseWailsOptions",
+      "type": "function",
+      "name": "baseWailsOptions",
+      "filePath": "main.go",
+      "lineRange": [
+        124,
+        136
+      ],
+      "summary": "Constructs shared Wails application options including asset server, event bindings, and Windows-specific visual settings.",
+      "tags": [
+        "wails-config",
+        "factory",
+        "ui-config"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:main.go:resolvedBackdropType",
+      "type": "function",
+      "name": "resolvedBackdropType",
+      "filePath": "main.go",
+      "lineRange": [
+        138,
+        144
+      ],
+      "summary": "Determines the Windows backdrop type (Mica or Acrylic) based on user appearance settings.",
+      "tags": [
+        "theming",
+        "config-resolution",
+        "ui-config"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:main.go:autoRule",
+      "type": "function",
+      "name": "autoRule",
+      "filePath": "main.go",
+      "lineRange": [
+        146,
+        152
+      ],
+      "summary": "Applies automatic URL routing rules from user configuration if enabled.",
+      "tags": [
+        "rule-engine",
+        "routing",
+        "config-usage"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:internal/config/service.go:Load",
+      "type": "function",
+      "name": "Load",
+      "filePath": "internal/config/service.go",
+      "lineRange": [
+        20,
+        45
+      ],
+      "summary": "Loads UserSettings from the configuration file on disk with error handling and default fallback.",
+      "tags": [
+        "config-loader",
+        "persistence",
+        "error-handling"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:internal/config/service.go:Get",
+      "type": "function",
+      "name": "Get",
+      "filePath": "internal/config/service.go",
+      "lineRange": [
+        47,
+        57
+      ],
+      "summary": "Returns the cached settings or reloads from disk if cache is stale.",
+      "tags": [
+        "config-cache",
+        "persistence"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:internal/browser/launch.go:OpenURL",
+      "type": "function",
+      "name": "OpenURL",
+      "filePath": "internal/browser/launch.go",
+      "lineRange": [
+        23,
+        30
+      ],
+      "summary": "Launches a browser process to open the given URL, routing to explorer.exe for UWP apps.",
+      "tags": [
+        "browser-launcher",
+        "process-spawning",
+        "uwp-support"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:internal/browser/launch.go:OpenURLWithAlternate",
+      "type": "function",
+      "name": "OpenURLWithAlternate",
+      "filePath": "internal/browser/launch.go",
+      "lineRange": [
+        32,
+        41
+      ],
+      "summary": "Launches a browser with alternate launch arguments (e.g., private mode, profiles).",
+      "tags": [
+        "browser-launcher",
+        "alternate-profile",
+        "process-spawning"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:internal/ipc/pipe.go:TryForward",
+      "type": "function",
+      "name": "TryForward",
+      "filePath": "internal/ipc/pipe.go",
+      "lineRange": [
+        12,
+        35
+      ],
+      "summary": "Attempts to forward a URL to an existing Switchy instance via named pipe, returning success if delivered.",
+      "tags": [
+        "ipc",
+        "named-pipes",
+        "process-communication"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:internal/ipc/pipe.go:ListenAndServe",
+      "type": "function",
+      "name": "ListenAndServe",
+      "filePath": "internal/ipc/pipe.go",
+      "lineRange": [
+        37,
+        55
+      ],
+      "summary": "Listens on a named pipe for incoming URL requests and dispatches them via callback.",
+      "tags": [
+        "ipc",
+        "named-pipes",
+        "event-listener"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:internal/logger/logger.go:Init",
+      "type": "function",
+      "name": "Init",
+      "filePath": "internal/logger/logger.go",
+      "lineRange": [
+        16,
+        33
+      ],
+      "summary": "Initializes the structured logger with file-based output for debug and info levels.",
+      "tags": [
+        "logging",
+        "initialization",
+        "observability"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:internal/logger/logger.go:Debug",
+      "type": "function",
+      "name": "Debug",
+      "filePath": "internal/logger/logger.go",
+      "lineRange": [
+        35,
+        37
+      ],
+      "summary": "Logs a debug-level message with optional key-value fields.",
+      "tags": [
+        "logging",
+        "debug"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:internal/logger/logger.go:Info",
+      "type": "function",
+      "name": "Info",
+      "filePath": "internal/logger/logger.go",
+      "lineRange": [
+        39,
+        41
+      ],
+      "summary": "Logs an info-level message with optional key-value fields.",
+      "tags": [
+        "logging",
+        "observability"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:internal/browser/icon_windows.go:GetBrowserIcon",
+      "type": "function",
+      "name": "GetBrowserIcon",
+      "filePath": "internal/browser/icon_windows.go",
+      "lineRange": [
+        18,
+        40
+      ],
+      "summary": "Extracts the default icon from a browser executable and returns it as a base64-encoded PNG.",
+      "tags": [
+        "icon-extraction",
+        "windows-api",
+        "image-encoding"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:internal/browser/icon_windows.go:GetBrowserIconAt",
+      "type": "function",
+      "name": "GetBrowserIconAt",
+      "filePath": "internal/browser/icon_windows.go",
+      "lineRange": [
+        42,
+        60
+      ],
+      "summary": "Extracts an icon at a specific size from a browser executable and returns it base64-encoded.",
+      "tags": [
+        "icon-extraction",
+        "windows-api",
+        "image-encoding",
+        "sizing"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:frontend/src/App.vue",
+      "path": "frontend/src/App.vue",
+      "language": "vue",
+      "fileCategory": "code",
+      "sizeLines": 49,
+      "type": "file",
+      "name": "App",
+      "summary": "Root Vue component that bootstraps the app. On mount, calls Wails backend (GetMode, GetSettings) to determine which view to render (SelectorView or SettingsView). Applies theme and appearance stylesheets dynamically before showing the view.",
+      "functions": [
+        {
+          "name": "onMounted hook",
+          "signature": "onMounted(async () => { ... })",
+          "summary": "Fetches mode and settings from Wails backend, applies theme/appearance, then sets the active view mode."
+        }
+      ],
+      "symbols": [],
+      "dependencies": [
+        "frontend/src/views/SelectorView.vue",
+        "frontend/src/views/SettingsView.vue",
+        "frontend/src/composables/useTheme.ts",
+        "frontend/src/types.ts"
+      ],
+      "imports": [
+        {
+          "specifier": "vue",
+          "importedNames": [
+            "ref",
+            "onMounted"
+          ]
+        },
+        {
+          "specifier": "@/views/SelectorView.vue",
+          "importedNames": [
+            "SelectorView"
+          ]
+        },
+        {
+          "specifier": "@/views/SettingsView.vue",
+          "importedNames": [
+            "SettingsView"
+          ]
+        },
+        {
+          "specifier": "@/composables/useTheme",
+          "importedNames": [
+            "applyTheme",
+            "applyAppearance"
+          ]
+        }
+      ],
+      "complexity": "moderate",
+      "tags": [
+        "untagged"
+      ]
+    },
+    {
+      "id": "file:frontend/src/components/BrowserList.vue",
+      "path": "frontend/src/components/BrowserList.vue",
+      "language": "vue",
+      "fileCategory": "code",
+      "sizeLines": 84,
+      "type": "file",
+      "name": "BrowserList",
+      "summary": "Vertical stacked list of BrowserButton components. Shows a loading state or an empty state with a link to open settings. Passes keyboard shortcuts and staggered animation styles to each button.",
+      "functions": [],
+      "symbols": [],
+      "dependencies": [
+        "frontend/src/types.ts",
+        "frontend/src/utils/browser.ts",
+        "frontend/src/components/BrowserButton.vue"
+      ],
+      "imports": [
+        {
+          "specifier": "@/types",
+          "importedNames": [
+            "Browser"
+          ]
+        },
+        {
+          "specifier": "@/components/BrowserButton.vue",
+          "importedNames": [
+            "BrowserButton"
+          ]
+        },
+        {
+          "specifier": "@/utils/browser",
+          "importedNames": [
+            "browserShortcut",
+            "browserAnimationStyle"
+          ]
+        }
+      ],
+      "props": [
+        {
+          "name": "browsers",
+          "type": "Browser[]",
+          "required": true
+        },
+        {
+          "name": "loading",
+          "type": "boolean",
+          "required": false
+        }
+      ],
+      "emits": [
+        {
+          "name": "open",
+          "params": [
+            "name: string"
+          ]
+        },
+        {
+          "name": "open-settings"
+        }
+      ],
+      "complexity": "moderate",
+      "tags": [
+        "untagged"
+      ]
+    },
+    {
+      "id": "file:frontend/src/components/TimerBar.vue",
+      "path": "frontend/src/components/TimerBar.vue",
+      "language": "vue",
+      "fileCategory": "code",
+      "sizeLines": 39,
+      "type": "file",
+      "name": "TimerBar",
+      "summary": "Countdown progress bar that decrements every second. Emits a 'timeout' event when the countdown reaches zero. Automatically cleans up the interval timer on unmount.",
+      "functions": [],
+      "symbols": [],
+      "dependencies": [],
+      "imports": [
+        {
+          "specifier": "vue",
+          "importedNames": [
+            "ref",
+            "onMounted",
+            "onUnmounted"
+          ]
+        }
+      ],
+      "props": [
+        {
+          "name": "seconds",
+          "type": "number",
+          "required": true
+        }
+      ],
+      "emits": [
+        {
+          "name": "timeout"
+        }
+      ],
+      "complexity": "moderate",
+      "tags": [
+        "untagged"
+      ]
+    },
+    {
+      "id": "file:frontend/src/composables/useBrowserIcon.ts",
+      "path": "frontend/src/composables/useBrowserIcon.ts",
+      "language": "typescript",
+      "fileCategory": "code",
+      "sizeLines": 34,
+      "type": "file",
+      "name": "useBrowserIcon",
+      "summary": "Vue composable that reactively loads a browser's PNG icon as a data URL from the Wails backend (GetBrowserIconAt). Accepts a reactive browser source ref and optional pixel size. Auto-reloads when ExePath or IconSpec changes via watch.",
+      "functions": [
+        {
+          "name": "useBrowserIcon",
+          "signature": "useBrowserIcon(browserSource: Ref<{ IconSpec?: string; ExePath?: string } | undefined>, opts?: { pixelSize?: number }): { iconDataUrl: Ref<string>, loadIcon: () => Promise<void>, pixelSize: number }",
+          "summary": "Creates a reactive icon loader. Returns iconDataUrl ref, loadIcon function, and clamped pixelSize (64-256)."
+        },
+        {
+          "name": "loadIcon",
+          "signature": "loadIcon(): Promise<void>",
+          "summary": "Fetches icon data URL from backend using GetBrowserIconAt. Handles empty spec gracefully."
+        }
+      ],
+      "symbols": [
+        {
+          "name": "defaultPixelSize",
+          "type": "constant",
+          "value": "256"
+        }
+      ],
+      "dependencies": [
+        "frontend/src/utils/browser.ts"
+      ],
+      "imports": [
+        {
+          "specifier": "vue",
+          "importedNames": [
+            "ref",
+            "Ref",
+            "watch"
+          ]
+        },
+        {
+          "specifier": "@wailsjs/go/main/App",
+          "importedNames": [
+            "GetBrowserIconAt"
+          ]
+        }
+      ],
+      "complexity": "moderate",
+      "tags": [
+        "untagged"
+      ]
+    },
+    {
+      "id": "file:frontend/src/composables/useTheme.ts",
+      "path": "frontend/src/composables/useTheme.ts",
+      "language": "typescript",
+      "fileCategory": "code",
+      "sizeLines": 42,
+      "type": "file",
+      "name": "useTheme",
+      "summary": "Provides functions to dynamically swap theme (color palette) and appearance (window material: acrylic/mica) stylesheets at runtime. Uses a swapLink helper that handles CSS caching by checking data-href attributes.",
+      "functions": [
+        {
+          "name": "swapLink",
+          "signature": "swapLink(id: string, href: string): Promise<void>",
+          "summary": "Swaps a stylesheet link element by id. Resolves immediately if already loaded with the same href."
+        },
+        {
+          "name": "applyTheme",
+          "signature": "applyTheme(theme: string): Promise<void>",
+          "summary": "Loads the color palette theme stylesheet by ID 'switchy-theme'."
+        },
+        {
+          "name": "applyAppearance",
+          "signature": "applyAppearance(appearance: string): Promise<void>",
+          "summary": "Loads the window material stylesheet by ID 'switchy-appearance'. Defaults to acrylic."
+        }
+      ],
+      "symbols": [
+        {
+          "name": "THEME_URLS",
+          "type": "constant"
+        },
+        {
+          "name": "APPEARANCE_URLS",
+          "type": "constant"
+        }
+      ],
+      "dependencies": [],
+      "imports": [
+        {
+          "specifier": "@/themes/theme-default.css?url",
+          "importedNames": [
+            "defaultThemeUrl"
+          ]
+        },
+        {
+          "specifier": "@/themes/appearance-acrylic.css?url",
+          "importedNames": [
+            "acrylicAppUrl"
+          ]
+        },
+        {
+          "specifier": "@/themes/appearance-mica.css?url",
+          "importedNames": [
+            "micaAppUrl"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "name": "Appearance",
+          "type": "type"
+        },
+        {
+          "name": "Theme",
+          "type": "type"
+        },
+        {
+          "name": "applyTheme",
+          "type": "function"
+        },
+        {
+          "name": "applyAppearance",
+          "type": "function"
+        }
+      ],
+      "complexity": "moderate",
+      "tags": [
+        "untagged"
+      ]
+    },
+    {
+      "id": "file:frontend/src/main.ts",
+      "path": "frontend/src/main.ts",
+      "language": "typescript",
+      "fileCategory": "code",
+      "sizeLines": 4,
+      "type": "file",
+      "name": "main",
+      "summary": "Vue application entry point. Creates and mounts the App component onto #app element, importing global styles.",
+      "functions": [],
+      "symbols": [],
+      "dependencies": [
+        "frontend/src/App.vue"
+      ],
+      "imports": [
+        {
+          "specifier": "vue",
+          "importedNames": [
+            "createApp"
+          ]
+        },
+        {
+          "specifier": "@/App.vue",
+          "importedNames": [
+            "App"
+          ]
+        },
+        {
+          "specifier": "./style.css",
+          "importedNames": []
+        }
+      ],
+      "complexity": "moderate",
+      "tags": [
+        "untagged"
+      ]
+    },
+    {
+      "id": "module:frontend/src/utils/browser.ts",
+      "path": "frontend/src/utils/browser.ts",
+      "language": "typescript",
+      "fileCategory": "code",
+      "sizeLines": 12,
+      "type": "module",
+      "name": "browser",
+      "summary": "Utility functions for browser shortcut key labels and staggered animation delays. Maps browser index to numeric keyboard shortcuts (1-9) and calculates animation delay offsets.",
+      "functions": [
+        {
+          "name": "browserShortcut",
+          "signature": "browserShortcut(idx: number): string",
+          "summary": "Returns a keyboard shortcut label (1-9) for the given browser index, or empty string for index >= 9."
+        },
+        {
+          "name": "browserAnimationDelay",
+          "signature": "browserAnimationDelay(idx: number): number",
+          "summary": "Calculates staggered animation delay: BASE (40ms) + idx * STEP (40ms)."
+        },
+        {
+          "name": "browserAnimationStyle",
+          "signature": "browserAnimationStyle(idx: number): Record<string, string>",
+          "summary": "Returns an inline style object with animationDelay for staggered entry."
+        }
+      ],
+      "symbols": [
+        {
+          "name": "MAX_KEYBOARD_SHORTCUT_INDEX",
+          "type": "constant",
+          "value": "9"
+        },
+        {
+          "name": "ANIMATION_BASE_DELAY_MS",
+          "type": "constant",
+          "value": "40"
+        },
+        {
+          "name": "ANIMATION_STEP_DELAY_MS",
+          "type": "constant",
+          "value": "40"
+        }
+      ],
+      "dependencies": [],
+      "imports": [],
+      "exports": [
+        {
+          "name": "MAX_KEYBOARD_SHORTCUT_INDEX",
+          "type": "constant"
+        },
+        {
+          "name": "ANIMATION_BASE_DELAY_MS",
+          "type": "constant"
+        },
+        {
+          "name": "ANIMATION_STEP_DELAY_MS",
+          "type": "constant"
+        },
+        {
+          "name": "browserShortcut",
+          "type": "function"
+        },
+        {
+          "name": "browserAnimationDelay",
+          "type": "function"
+        },
+        {
+          "name": "browserAnimationStyle",
+          "type": "function"
+        }
+      ],
+      "complexity": "moderate",
+      "tags": [
+        "untagged"
+      ]
+    },
+    {
+      "id": "module:frontend/src/utils/config.ts",
+      "path": "frontend/src/utils/config.ts",
+      "language": "typescript",
+      "fileCategory": "code",
+      "sizeLines": 7,
+      "type": "module",
+      "name": "config",
+      "summary": "Layout normalization utility. Converts raw selector layout config string to canonical 'vertical' or 'horizontal' value.",
+      "functions": [
+        {
+          "name": "normLayout",
+          "signature": "normLayout(raw?: string): 'vertical' | 'horizontal'",
+          "summary": "Normalizes a layout string, returning 'horizontal' only if input matches exactly, otherwise 'vertical'."
+        }
+      ],
+      "symbols": [],
+      "dependencies": [],
+      "imports": [],
+      "exports": [
+        {
+          "name": "normLayout",
+          "type": "function"
+        }
+      ],
+      "complexity": "moderate",
+      "tags": [
+        "untagged"
+      ]
+    },
+    {
+      "id": "file:frontend/src/vite-env.d.ts",
+      "path": "frontend/src/vite-env.d.ts",
+      "language": "typescript",
+      "fileCategory": "code",
+      "sizeLines": 6,
+      "type": "file",
+      "name": "vite-env",
+      "summary": "TypeScript declaration file for Vite client types and Vue SFC module imports. Enables type-checking of .vue file imports.",
+      "functions": [],
+      "symbols": [],
+      "dependencies": [],
+      "imports": [],
+      "complexity": "moderate",
+      "tags": [
+        "untagged"
+      ]
+    },
+    {
+      "id": "config:frontend/.gitignore",
+      "path": "frontend/.gitignore",
+      "language": "unknown",
+      "fileCategory": "config",
+      "sizeLines": 22,
+      "type": "config",
+      "name": ".gitignore",
+      "summary": "Git ignore rules for the frontend: excludes node_modules, dist builds, Vite cache, Wails bindings (wailsjs/), environment files, TypeScript build info, and test coverage.",
+      "functions": [],
+      "symbols": [],
+      "dependencies": [],
+      "imports": [],
+      "complexity": "moderate",
+      "tags": [
+        "untagged"
+      ]
+    },
+    {
+      "id": "config:frontend/.prettierignore",
+      "path": "frontend/.prettierignore",
+      "language": "unknown",
+      "fileCategory": "config",
+      "sizeLines": 4,
+      "type": "config",
+      "name": ".prettierignore",
+      "summary": "Prettier ignore patterns: dist/, wailsjs/, node_modules/, and all .d.ts files.",
+      "functions": [],
+      "symbols": [],
+      "dependencies": [],
+      "imports": [],
+      "complexity": "moderate",
+      "tags": [
+        "untagged"
+      ]
+    },
+    {
+      "id": "config:frontend/.prettierrc.json",
+      "path": "frontend/.prettierrc.json",
+      "language": "json",
+      "fileCategory": "config",
+      "sizeLines": 8,
+      "type": "config",
+      "name": ".prettierrc",
+      "summary": "Prettier configuration: no semicolons, single quotes, 2-space tabs, ES5 trailing commas, 100 char print width, uses prettier-plugin-tailwindcss.",
+      "functions": [],
+      "symbols": [],
+      "dependencies": [],
+      "imports": [],
+      "complexity": "moderate",
+      "tags": [
+        "untagged"
+      ]
+    },
+    {
+      "id": "file:frontend/README.md",
+      "path": "frontend/README.md",
+      "language": "markdown",
+      "fileCategory": "docs",
+      "sizeLines": 74,
+      "type": "document",
+      "name": "README",
+      "summary": "Documentation for the Switchy frontend. Describes the stack (Vue 3, TypeScript, Tailwind CSS, Vite), project layout, development workflow (wails dev), code quality commands (lint, format), Wails integration details, and recommended IDE setup.",
+      "functions": [],
+      "symbols": [],
+      "dependencies": [],
+      "imports": [],
+      "complexity": "moderate",
+      "tags": [
+        "untagged"
+      ]
+    },
+    {
+      "id": "config:frontend/eslint.config.js",
+      "path": "frontend/eslint.config.js",
+      "language": "javascript",
+      "fileCategory": "config",
+      "sizeLines": 48,
+      "type": "config",
+      "name": "eslint.config",
+      "summary": "ESLint flat config for the frontend. Applies recommended JS rules, TypeScript strict-ish rules (with no-explicit-any as warn), Vue recommended rules with tsParser, and config-prettier to avoid formatting conflicts. Ignores .d.ts files. Allows empty catch blocks for Wails IPC handlers.",
+      "functions": [],
+      "symbols": [],
+      "dependencies": [],
+      "imports": [
+        {
+          "specifier": "@eslint/js",
+          "importedNames": [
+            "js"
+          ]
+        },
+        {
+          "specifier": "@typescript-eslint/eslint-plugin",
+          "importedNames": [
+            "tsPlugin"
+          ]
+        },
+        {
+          "specifier": "@typescript-eslint/parser",
+          "importedNames": [
+            "tsParser"
+          ]
+        },
+        {
+          "specifier": "eslint-plugin-vue",
+          "importedNames": [
+            "pluginVue"
+          ]
+        },
+        {
+          "specifier": "eslint-config-prettier",
+          "importedNames": [
+            "configPrettier"
+          ]
+        }
+      ],
+      "complexity": "moderate",
+      "tags": [
+        "untagged"
+      ]
+    },
+    {
+      "id": "file:frontend/index.html",
+      "path": "frontend/index.html",
+      "language": "html",
+      "fileCategory": "markup",
+      "sizeLines": 15,
+      "type": "file",
+      "name": "index",
+      "summary": "HTML entry point for the Vite app. Loads Google Fonts (Inter Tight and JetBrains Mono), sets viewport meta, and mounts the Vue app into #app div.",
+      "functions": [],
+      "symbols": [],
+      "dependencies": [],
+      "imports": [],
+      "complexity": "moderate",
+      "tags": [
+        "untagged"
+      ]
+    },
+    {
+      "id": "config:frontend/package.json",
+      "path": "frontend/package.json",
+      "language": "json",
+      "fileCategory": "config",
+      "sizeLines": 36,
+      "type": "config",
+      "name": "package.json",
+      "summary": "NPM package manifest for the frontend. Defines scripts for dev, build, preview, lint, and format. Dev dependencies include Vue 3.5+, Vite 8+, TypeScript 5.7+, Tailwind CSS 3, ESLint 9, Prettier 3, and related tooling.",
+      "functions": [],
+      "symbols": [],
+      "dependencies": [],
+      "imports": [],
+      "complexity": "moderate",
+      "tags": [
+        "untagged"
+      ]
+    },
+    {
+      "id": "config:frontend/postcss.config.js",
+      "path": "frontend/postcss.config.js",
+      "language": "javascript",
+      "fileCategory": "config",
+      "sizeLines": 6,
+      "type": "config",
+      "name": "postcss.config",
+      "summary": "PostCSS configuration enabling Tailwind CSS and Autoprefixer plugins.",
+      "functions": [],
+      "symbols": [],
+      "dependencies": [],
+      "imports": [],
+      "complexity": "moderate",
+      "tags": [
+        "untagged"
+      ]
+    },
+    {
+      "id": "file:frontend/src/assets/fonts/OFL.txt",
+      "path": "frontend/src/assets/fonts/OFL.txt",
+      "language": "unknown",
+      "fileCategory": "docs",
+      "sizeLines": 75,
+      "type": "document",
+      "name": "OFL",
+      "summary": "SIL Open Font License Version 1.1 text for the Nunito font. Grants permission to use, study, modify, and redistribute the font software with conditions.",
+      "functions": [],
+      "symbols": [],
+      "dependencies": [],
+      "imports": [],
+      "complexity": "moderate",
+      "tags": [
+        "untagged"
+      ]
+    },
+    {
+      "id": "file:frontend/src/views/SettingsView.vue",
+      "type": "file",
+      "language": "vue",
+      "sizeLines": 1091,
+      "fileCategory": "code",
+      "summary": "Settings/configuration window for Switchy. Provides a sidebar navigation with three sections: Browsers (auto-detect, add/edit/remove/reorder browsers), Rulesets (pattern-based URL routing rules with prefix support for domain/regex/contains), and Application (appearance material, color theme, timed auto-selection, selector layout, Windows default browser registration). Tracks unsaved changes and persists settings via Wails backend.",
+      "functions": [
+        {
+          "name": "markUnsaved",
+          "signature": "function markUnsaved(): void",
+          "description": "Increments the unsaved change counter for dirty-state tracking in the status bar."
+        },
+        {
+          "name": "load",
+          "signature": "async function load(): Promise<void>",
+          "description": "Fetches full user settings from Wails, initializes empty arrays for Browsers/Rulesets if null, and applies the saved theme and appearance."
+        },
+        {
+          "name": "setAppearance",
+          "signature": "function setAppearance(appearance: 'acrylic' | 'mica'): void",
+          "description": "Updates the appearance setting in state, applies it locally via the composable, and sends it to the Wails backend. Marks as unsaved."
+        },
+        {
+          "name": "setTheme",
+          "signature": "function setTheme(theme: string): void",
+          "description": "Updates the theme setting in state and applies it locally via the composable. Marks as unsaved."
+        },
+        {
+          "name": "save",
+          "signature": "async function save(): Promise<void>",
+          "description": "Persists the current settings to the Wails backend, resets the unsaved counter, and shows a save confirmation message."
+        },
+        {
+          "name": "detect",
+          "signature": "async function detect(): Promise<void>",
+          "description": "Scans the Windows registry for installed browsers via Wails, filters out already-known paths, and appends new entries."
+        },
+        {
+          "name": "registerDefault",
+          "signature": "async function registerDefault(): Promise<void>",
+          "description": "Registers Switchy as the Windows default browser handler via Wails."
+        },
+        {
+          "name": "unregisterDefault",
+          "signature": "async function unregisterDefault(): Promise<void>",
+          "description": "Removes Switchy as the Windows default browser handler."
+        },
+        {
+          "name": "addBrowser",
+          "signature": "function addBrowser(): void",
+          "description": "Appends a new empty browser entry with default name to the Browsers list."
+        },
+        {
+          "name": "removeBrowser",
+          "signature": "function removeBrowser(idx: number): void",
+          "description": "Removes a browser entry at the given index."
+        },
+        {
+          "name": "moveBrowserUp",
+          "signature": "function moveBrowserUp(idx: number): void",
+          "description": "Swaps a browser entry with the one above it (no-op if already first)."
+        },
+        {
+          "name": "moveBrowserDown",
+          "signature": "function moveBrowserDown(idx: number): void",
+          "description": "Swaps a browser entry with the one below it (no-op if already last)."
+        },
+        {
+          "name": "addRuleset",
+          "signature": "function addRuleset(): void",
+          "description": "Appends a new empty ruleset with default name and enabled=true."
+        },
+        {
+          "name": "removeRuleset",
+          "signature": "function removeRuleset(idx: number): void",
+          "description": "Removes a ruleset entry at the given index."
+        },
+        {
+          "name": "toggleUseRules",
+          "signature": "function toggleUseRules(): void",
+          "description": "Toggles the master UseRules flag that enables/disables pattern-based URL routing."
+        },
+        {
+          "name": "toggleTimedSelection",
+          "signature": "function toggleTimedSelection(): void",
+          "description": "Toggles the timed auto-selection feature."
+        },
+        {
+          "name": "setLayoutVertical",
+          "signature": "function setLayoutVertical(): void",
+          "description": "Sets the selector layout to vertical mode."
+        },
+        {
+          "name": "setLayoutHorizontal",
+          "signature": "function setLayoutHorizontal(): void",
+          "description": "Sets the selector layout to horizontal mode."
+        }
+      ],
+      "classes": [],
+      "exports": [],
+      "symbols": [
+        "Section type ('browsers' | 'rulesets' | 'app')",
+        "SAVE_MESSAGE_DURATION_MS (2000)",
+        "ACTION_MESSAGE_DURATION_MS (3000)",
+        "DEFAULT_BROWSER_NAME ('New Browser')",
+        "DEFAULT_RULESET_NAME ('New Ruleset')"
+      ],
+      "state": {
+        "reactiveRefs": [
+          "activeSection",
+          "settings",
+          "saving",
+          "message",
+          "registering",
+          "unsavedCount"
+        ]
+      },
+      "childComponents": [
+        "BrowserEditor",
+        "RulesetEditor"
+      ],
+      "styles": "Scoped CSS defining the settings window shell with titlebar, sidebar navigation, content area with page headers, settings cards, input fields, switches, look-and-feel pickers (appearance swatches, theme palette dots), empty states, and status bar. Uses CSS custom properties from theme/appearance files.",
+      "complexity": "moderate",
+      "name": "unknown",
+      "tags": [
+        "untagged"
+      ]
+    },
+    {
+      "id": "config:frontend/tailwind.config.js",
+      "type": "config",
+      "language": "javascript",
+      "sizeLines": 12,
+      "fileCategory": "config",
+      "summary": "Tailwind CSS configuration. Scans index.html and all Vue/TS/TSX files in src/ for utility classes. Extends the default font family with Inter as the primary sans-serif font.",
+      "functions": [],
+      "classes": [],
+      "exports": [
+        "default (Tailwind config object)"
+      ],
+      "symbols": [],
+      "childComponents": [],
+      "styles": "",
+      "complexity": "moderate",
+      "name": "unknown",
+      "tags": [
+        "untagged"
+      ]
+    },
+    {
+      "id": "config:frontend/tsconfig.json",
+      "type": "config",
+      "language": "json",
+      "sizeLines": 35,
+      "fileCategory": "config",
+      "summary": "TypeScript compiler configuration for the frontend. Targets ESNext with Node module resolution. Sets up path aliases (@/* â†’ ./src/*, @wailsjs/* â†’ ./wailsjs/*). Includes all .ts, .d.ts, .tsx, and .vue files under src/. References tsconfig.node.json for the build toolchain.",
+      "functions": [],
+      "classes": [],
+      "exports": [],
+      "symbols": [],
+      "childComponents": [],
+      "styles": "",
+      "complexity": "moderate",
+      "name": "unknown",
+      "tags": [
+        "untagged"
+      ]
+    },
+    {
+      "id": "config:frontend/tsconfig.node.json",
+      "type": "config",
+      "language": "json",
+      "sizeLines": 11,
+      "fileCategory": "config",
+      "summary": "TypeScript composite configuration for the Node/build toolchain. Enables composite builds with ESNext modules and Node resolution. Only includes vite.config.ts.",
+      "functions": [],
+      "classes": [],
+      "exports": [],
+      "symbols": [],
+      "childComponents": [],
+      "styles": "",
+      "complexity": "moderate",
+      "name": "unknown",
+      "tags": [
+        "untagged"
+      ]
+    },
+    {
+      "id": "config:frontend/vite.config.ts",
+      "type": "config",
+      "language": "typescript",
+      "sizeLines": 12,
+      "fileCategory": "config",
+      "summary": "Vite build configuration. Uses the Vue plugin and sets up path aliases (@ â†’ ./src, @wailsjs â†’ ./wailsjs) matching the tsconfig path mappings.",
+      "functions": [],
+      "classes": [],
+      "exports": [
+        "default (Vite config via defineConfig)"
+      ],
+      "symbols": [],
+      "childComponents": [],
+      "styles": "",
+      "complexity": "moderate",
+      "name": "unknown",
+      "tags": [
+        "untagged"
+      ]
+    },
+    {
+      "id": "file:frontend/src/themes/appearance-acrylic.css",
+      "type": "file",
+      "language": "css",
+      "sizeLines": 17,
+      "fileCategory": "markup",
+      "summary": "Acrylic appearance theme â€” bold frosted-glass material with strong blur (40-48px) and high saturation. Defines surface opacity levels (0.72-0.86), hairline borders, ink layers, and accent tint using CSS custom properties. All values derive from theme color tokens via relative color syntax, so swapping the theme file repaints every surface.",
+      "functions": [],
+      "classes": [],
+      "exports": [
+        ":root CSS custom properties"
+      ],
+      "symbols": [
+        "--backdrop-blur (blur 40px, saturate 150%)",
+        "--backdrop-blur-h (blur 48px, saturate 160%)",
+        "--substrate (0.84 opacity)",
+        "--substrate-top (0.86 opacity)",
+        "--sidebar (0.72 opacity)",
+        "--hairline (0.07 opacity)",
+        "--hairline-hi (0.14 opacity)",
+        "--ink-10 (0.06 opacity)",
+        "--ink-20 (0.14 opacity)",
+        "--accent-tint (0.12 opacity)"
+      ],
+      "childComponents": [],
+      "styles": "CSS custom properties on :root for acrylic appearance. Derives from --color-surface, --color-surface-hi, --color-sand, and --accent theme tokens.",
+      "complexity": "moderate",
+      "name": "unknown",
+      "tags": [
+        "untagged"
+      ]
+    },
+    {
+      "id": "file:frontend/src/themes/appearance-mica.css",
+      "type": "file",
+      "language": "css",
+      "sizeLines": 18,
+      "fileCategory": "markup",
+      "summary": "Mica appearance theme â€” subtle desktop-integrated material with light blur (24-28px) and low-opacity surfaces (0.30-0.44). Lets the Windows Mica compositor sample desktop wallpaper through the glass. Same structure as acrylic but with lower opacity values for a more transparent, wallpaper-tinted look.",
+      "functions": [],
+      "classes": [],
+      "exports": [
+        ":root CSS custom properties"
+      ],
+      "symbols": [
+        "--backdrop-blur (blur 24px, saturate 118%)",
+        "--backdrop-blur-h (blur 28px, saturate 122%)",
+        "--substrate (0.38 opacity)",
+        "--substrate-top (0.44 opacity)",
+        "--sidebar (0.30 opacity)",
+        "--hairline (0.05 opacity)",
+        "--hairline-hi (0.09 opacity)",
+        "--ink-10 (0.05 opacity)",
+        "--ink-20 (0.09 opacity)",
+        "--accent-tint (0.09 opacity)"
+      ],
+      "childComponents": [],
+      "styles": "CSS custom properties on :root for mica appearance. Derives from the same theme color tokens as acrylic but with lower opacity for transparency.",
+      "complexity": "moderate",
+      "name": "unknown",
+      "tags": [
+        "untagged"
+      ]
+    },
+    {
+      "id": "file:frontend/src/themes/theme-default.css",
+      "type": "file",
+      "language": "css",
+      "sizeLines": 69,
+      "fileCategory": "markup",
+      "summary": "Default color theme â€” the single source of truth for all design tokens. Defines the warm sand/Linen/clay/tan color palette, dark surface bases, semantic accent colors, ink scale (6 levels of text opacity), surface defaults (overridden by appearance files), backdrop blur defaults, fill primitives, stroke primitives, typography families (Inter Tight, JetBrains Mono), geometry/radius tokens (4px grid), and legacy alias tokens. Appearance files (acrylic/mica) override only the surface/blur subset.",
+      "functions": [],
+      "classes": [],
+      "exports": [
+        ":root CSS custom properties"
+      ],
+      "symbols": [
+        "--color-danger (#DB1A1A)",
+        "--color-sand (#F9F8F6)",
+        "--color-linen (#EFE9E3)",
+        "--color-clay (#D9CFC7)",
+        "--color-tan (#C9B59C)",
+        "--color-surface (#1C1410)",
+        "--color-surface-hi (#261A12)",
+        "--accent (#C9B59C)",
+        "--accent-dim (#8B7058)",
+        "--accent-text (#1C1410)",
+        "--ink-100 through --ink-10 (opacity scale 0.96 to 0.06)",
+        "--font-ui ('Inter Tight')",
+        "--font-mono ('JetBrains Mono')",
+        "--r-window (14px), --r-row (10px), --r-control (8px), --r-key (6px), --r-tag (4px)",
+        "Fill primitives (--fill-input through --fill-layer-alt)",
+        "Stroke primitives (--stroke-control through --stroke-divider)",
+        "Legacy aliases (--text-primary, --text-secondary, --text-tertiary, --text-disabled, --radius-control, --radius-overlay, --accent-light)"
+      ],
+      "childComponents": [],
+      "styles": "CSS custom properties on :root defining the complete design token system: colors, typography, geometry, fill/stroke primitives, and semantic aliases.",
+      "complexity": "moderate",
+      "name": "unknown",
+      "tags": [
+        "untagged"
+      ]
+    },
+    {
+      "id": "file:.claudeignore",
+      "path": ".claudeignore",
+      "language": "unknown",
+      "fileCategory": "config",
+      "type": "file",
+      "name": ".claudeignore",
+      "summary": "No summary available",
+      "functions": [],
+      "symbols": [],
+      "dependencies": [],
+      "imports": [],
+      "complexity": "moderate",
+      "tags": [
+        "untagged"
+      ]
+    },
+    {
+      "id": "file:.golangci.yml",
+      "path": ".golangci.yml",
+      "language": "yaml",
+      "fileCategory": "config",
+      "type": "file",
+      "name": ".golangci.yml",
+      "summary": "No summary available",
+      "functions": [],
+      "symbols": [],
+      "dependencies": [],
+      "imports": [],
+      "complexity": "moderate",
+      "tags": [
+        "untagged"
+      ]
+    },
+    {
+      "id": "file:.ignore",
+      "path": ".ignore",
+      "language": "unknown",
+      "fileCategory": "config",
+      "type": "file",
+      "name": ".ignore",
+      "summary": "No summary available",
+      "functions": [],
+      "symbols": [],
+      "dependencies": [],
+      "imports": [],
+      "complexity": "moderate",
+      "tags": [
+        "untagged"
+      ]
+    },
+    {
+      "id": "file:LICENSE",
+      "path": "LICENSE",
+      "language": "unknown",
+      "fileCategory": "docs",
+      "type": "file",
+      "name": "LICENSE",
+      "summary": "No summary available",
+      "functions": [],
+      "symbols": [],
+      "dependencies": [],
+      "imports": [],
+      "complexity": "moderate",
+      "tags": [
+        "untagged"
+      ]
+    },
+    {
+      "id": "file:Makefile",
+      "path": "Makefile",
+      "language": "makefile",
+      "fileCategory": "infra",
+      "type": "file",
+      "name": "Makefile",
+      "summary": "No summary available",
+      "functions": [],
+      "symbols": [],
+      "dependencies": [],
+      "imports": [],
+      "complexity": "moderate",
+      "tags": [
+        "untagged"
+      ]
+    },
+    {
+      "id": "file:build/README.md",
+      "path": "build/README.md",
+      "language": "markdown",
+      "fileCategory": "docs",
+      "type": "file",
+      "name": "README",
+      "summary": "No summary available",
+      "functions": [],
+      "symbols": [],
+      "dependencies": [],
+      "imports": [],
+      "complexity": "moderate",
+      "tags": [
+        "untagged"
+      ]
+    },
+    {
+      "id": "file:build/darwin/Info.dev.plist",
+      "path": "build/darwin/Info.dev.plist",
+      "language": "xml",
+      "fileCategory": "config",
+      "type": "file",
+      "name": "Info.dev.plist",
+      "summary": "No summary available",
+      "functions": [],
+      "symbols": [],
+      "dependencies": [],
+      "imports": [],
+      "complexity": "moderate",
+      "tags": [
+        "untagged"
+      ]
+    },
+    {
+      "id": "file:build/darwin/Info.plist",
+      "path": "build/darwin/Info.plist",
+      "language": "xml",
+      "fileCategory": "config",
+      "type": "file",
+      "name": "Info.plist",
+      "summary": "No summary available",
+      "functions": [],
+      "symbols": [],
+      "dependencies": [],
+      "imports": [],
+      "complexity": "moderate",
+      "tags": [
+        "untagged"
+      ]
+    },
+    {
+      "id": "file:build/windows/info.json",
+      "path": "build/windows/info.json",
+      "language": "json",
+      "fileCategory": "config",
+      "type": "file",
+      "name": "info.json",
+      "summary": "No summary available",
+      "functions": [],
+      "symbols": [],
+      "dependencies": [],
+      "imports": [],
+      "complexity": "moderate",
+      "tags": [
+        "untagged"
+      ]
+    },
+    {
+      "id": "file:build/windows/installer/installer.iss",
+      "path": "build/windows/installer/installer.iss",
+      "language": "unknown",
+      "fileCategory": "infra",
+      "type": "file",
+      "name": "installer.iss",
+      "summary": "No summary available",
+      "functions": [],
+      "symbols": [],
+      "dependencies": [],
+      "imports": [],
+      "complexity": "moderate",
+      "tags": [
+        "untagged"
+      ]
+    },
+    {
+      "id": "file:build/windows/installer/project.nsi",
+      "path": "build/windows/installer/project.nsi",
+      "language": "unknown",
+      "fileCategory": "infra",
+      "type": "file",
+      "name": "project.nsi",
+      "summary": "No summary available",
+      "functions": [],
+      "symbols": [],
+      "dependencies": [],
+      "imports": [],
+      "complexity": "moderate",
+      "tags": [
+        "untagged"
+      ]
+    },
+    {
+      "id": "file:build/windows/installer/wails_tools.nsh",
+      "path": "build/windows/installer/wails_tools.nsh",
+      "language": "unknown",
+      "fileCategory": "infra",
+      "type": "file",
+      "name": "wails_tools.nsh",
+      "summary": "No summary available",
+      "functions": [],
+      "symbols": [],
+      "dependencies": [],
+      "imports": [],
+      "complexity": "moderate",
+      "tags": [
+        "untagged"
+      ]
+    },
+    {
+      "id": "file:build/windows/wails.exe.manifest",
+      "path": "build/windows/wails.exe.manifest",
+      "language": "xml",
+      "fileCategory": "config",
+      "type": "file",
+      "name": "wails.exe.manifest",
+      "summary": "No summary available",
+      "functions": [],
+      "symbols": [],
+      "dependencies": [],
+      "imports": [],
+      "complexity": "moderate",
+      "tags": [
+        "untagged"
+      ]
+    },
+    {
+      "id": "file:internal/.gitignore",
+      "path": "internal/.gitignore",
+      "language": "unknown",
+      "fileCategory": "config",
+      "type": "file",
+      "name": ".gitignore",
+      "summary": "No summary available",
+      "functions": [],
+      "symbols": [],
+      "dependencies": [],
+      "imports": [],
+      "complexity": "moderate",
+      "tags": [
+        "untagged"
+      ]
+    },
+    {
+      "id": "file:scripts/.gitignore",
+      "path": "scripts/.gitignore",
+      "language": "unknown",
+      "fileCategory": "config",
+      "type": "file",
+      "name": ".gitignore",
+      "summary": "No summary available",
+      "functions": [],
+      "symbols": [],
+      "dependencies": [],
+      "imports": [],
+      "complexity": "moderate",
+      "tags": [
+        "untagged"
+      ]
+    },
+    {
+      "id": "file:scripts/build.ps1",
+      "path": "scripts/build.ps1",
+      "language": "powershell",
+      "fileCategory": "script",
+      "type": "file",
+      "name": "build.ps1",
+      "summary": "No summary available",
+      "functions": [],
+      "symbols": [],
+      "dependencies": [],
+      "imports": [],
+      "complexity": "moderate",
+      "tags": [
+        "untagged"
+      ]
+    },
+    {
+      "id": "file:wails.json",
+      "path": "wails.json",
+      "language": "json",
+      "fileCategory": "config",
+      "type": "file",
+      "name": "wails.json",
+      "summary": "No summary available",
+      "functions": [],
+      "symbols": [],
+      "dependencies": [],
+      "imports": [],
+      "complexity": "moderate",
+      "tags": [
+        "untagged"
+      ]
+    },
+    {
+      "id": "file:internal/registry/registry.go",
+      "type": "file",
+      "name": "registry.go",
+      "filePath": "internal/registry/registry.go",
+      "summary": "Windows registry integration module that registers and unregisters Switchy as a system-level default browser via WinAPI registry keys and capabilities entries.",
+      "tags": [
+        "windows-integration",
+        "registry-management",
+        "system-level",
+        "installation"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:internal/registry/registry.go:Register",
+      "type": "function",
+      "name": "Register",
+      "filePath": "internal/registry/registry.go",
+      "lineRange": [
+        19,
+        46
+      ],
+      "summary": "Registers Switchy as a Windows default browser by writing registry keys for client metadata, ProgID, capabilities, URL associations, and shell command handlers.",
+      "tags": [
+        "public-api",
+        "registration",
+        "orchestration"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:internal/registry/registry.go:Unregister",
+      "type": "function",
+      "name": "Unregister",
+      "filePath": "internal/registry/registry.go",
+      "lineRange": [
+        48,
+        67
+      ],
+      "summary": "Removes all Switchy registry entries from Windows, cleaning up browser registration and capabilities keys to fully uninstall the application.",
+      "tags": [
+        "public-api",
+        "cleanup",
+        "uninstallation"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:internal/registry/registry.go:OpenDefaultAppsSettings",
+      "type": "function",
+      "name": "OpenDefaultAppsSettings",
+      "filePath": "internal/registry/registry.go",
+      "lineRange": [
+        69,
+        71
+      ],
+      "summary": "Opens the Windows Default apps settings panel (ms-settings:defaultapps) to allow the user to confirm Switchy as their default browser.",
+      "tags": [
+        "public-api",
+        "system-interaction",
+        "user-workflow"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:internal/rules/matcher.go",
+      "type": "file",
+      "name": "matcher.go",
+      "filePath": "internal/rules/matcher.go",
+      "summary": "URL pattern matching engine that evaluates rules against URLs using domain, regex, and substring patterns to determine the target browser.",
+      "tags": [
+        "url-routing",
+        "pattern-matching",
+        "rule-engine"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:internal/rules/matcher.go:Match",
+      "type": "function",
+      "name": "Match",
+      "filePath": "internal/rules/matcher.go",
+      "lineRange": [
+        18,
+        32
+      ],
+      "summary": "Public entry point that resolves the first matching browser for a given URL across enabled rulesets, returning the browser name or empty string if no match.",
+      "tags": [
+        "public-api",
+        "routing-logic",
+        "main-entry-point"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:README.md",
+      "type": "document",
+      "name": "README.md",
+      "filePath": "README.md",
+      "summary": "Comprehensive project documentation covering Switchy's features, architecture, development setup, build instructions, rule patterns, and CLI flags with extensive code examples.",
+      "tags": [
+        "documentation",
+        "entry-point",
+        "user-guide",
+        "developer-guide"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:frontend/src/style.css",
+      "type": "file",
+      "name": "style.css",
+      "filePath": "frontend/src/style.css",
+      "summary": "Global CSS stylesheet defining design tokens (colors, spacing, typography, shadows), reusable component classes, and responsive grid system for the Vue 3 frontend.",
+      "tags": [
+        "styling",
+        "design-tokens",
+        "layout-system",
+        "responsive-design"
+      ],
+      "complexity": "moderate",
+      "languageNotes": "CSS custom properties (--ink-*, --accent-*, --font-*) provide a comprehensive design system with light/dark theme support."
+    },
+    {
+      "id": "file:frontend/src/types.ts",
+      "type": "file",
+      "name": "types.ts",
+      "filePath": "frontend/src/types.ts",
+      "summary": "TypeScript type definitions that mirror the Go backend structures for browsers, rulesets, rules, and application settings, ensuring frontend-backend contract consistency.",
+      "tags": [
+        "type-definition",
+        "data-models",
+        "shared-contract"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:frontend/src/components/BrowserButton.vue",
+      "type": "file",
+      "name": "BrowserButton.vue",
+      "filePath": "frontend/src/components/BrowserButton.vue",
+      "summary": "Single browser row component in vertical list layout displaying icon, name, profile variants, and keyboard shortcut with stagger animation.",
+      "tags": [
+        "component",
+        "ui-element",
+        "vertical-layout"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:frontend/src/components/BrowserDock.vue",
+      "type": "file",
+      "name": "BrowserDock.vue",
+      "filePath": "frontend/src/components/BrowserDock.vue",
+      "summary": "Container component for horizontal dock layout that renders BrowserDockTile children with scrollable overflow and floor separator.",
+      "tags": [
+        "component",
+        "container",
+        "horizontal-layout"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:frontend/src/components/BrowserDockTile.vue",
+      "type": "file",
+      "name": "BrowserDockTile.vue",
+      "filePath": "frontend/src/components/BrowserDockTile.vue",
+      "summary": "Large-icon browser tile component for horizontal dock layout with keycap badge, focus state styling, and scale/translate animations.",
+      "tags": [
+        "component",
+        "ui-element",
+        "horizontal-layout"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:frontend/src/components/BrowserEditor.vue",
+      "type": "file",
+      "name": "BrowserEditor.vue",
+      "filePath": "frontend/src/components/BrowserEditor.vue",
+      "summary": "Collapsible settings panel for editing a single browser's metadata (name, path, launch args, UWP flag) and managing alternate launch profiles.",
+      "tags": [
+        "component",
+        "settings-ui",
+        "form-control"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:frontend/src/components/RulesetEditor.vue",
+      "type": "file",
+      "name": "RulesetEditor.vue",
+      "filePath": "frontend/src/components/RulesetEditor.vue",
+      "summary": "Collapsible settings panel for editing rulesets with inline rule management (add/edit/delete pattern-to-browser mappings) and enable/disable toggle.",
+      "tags": [
+        "component",
+        "settings-ui",
+        "rule-management"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:frontend/src/components/UrlCard.vue",
+      "type": "file",
+      "name": "UrlCard.vue",
+      "filePath": "frontend/src/components/UrlCard.vue",
+      "summary": "Display card showing the current URL with protocol-specific icons (http/https/mailto), edit mode, copy button, and URL truncation for readability.",
+      "tags": [
+        "component",
+        "ui-element",
+        "url-display"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:frontend/src/views/SelectorView.vue",
+      "type": "file",
+      "name": "SelectorView.vue",
+      "filePath": "frontend/src/views/SelectorView.vue",
+      "summary": "Main browser picker interface with vertical/horizontal layout modes, timed auto-selection countdown, URL display, and browser selection with Wails backend integration.",
+      "tags": [
+        "entry-point",
+        "main-view",
+        "ui-orchestration"
+      ],
+      "complexity": "complex"
+    }
+  ],
+  "edges": [
+    {
+      "source": "file:app.go",
+      "target": "class:app.go:App",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:app.go",
+      "target": "function:app.go:NewApp",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:app.go",
+      "target": "function:app.go:GetSettings",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:app.go",
+      "target": "function:app.go:GetBrowsers",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:app.go",
+      "target": "function:app.go:OpenWithBrowser",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:app.go",
+      "target": "function:app.go:OpenWithAlternate",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:app.go",
+      "target": "function:app.go:ResizeSelector",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:app.go",
+      "target": "function:app.go:GetWorkArea",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:app.go",
+      "target": "function:app.go:OpenSettings",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:app.go",
+      "target": "function:app.go:DetectBrowsers",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:app.go",
+      "target": "class:app.go:WindowPos",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:app.go",
+      "target": "class:app.go:WindowSize",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:app.go",
+      "target": "class:app.go:WorkArea",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:main.go",
+      "target": "function:main.go:main",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:main.go",
+      "target": "function:main.go:runSelector",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:main.go",
+      "target": "function:main.go:runSettings",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:main.go",
+      "target": "function:main.go:baseWailsOptions",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:main.go",
+      "target": "function:main.go:resolvedBackdropType",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:main.go",
+      "target": "function:main.go:autoRule",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:internal/config/service.go",
+      "target": "function:internal/config/service.go:Load",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:internal/config/service.go",
+      "target": "function:internal/config/service.go:Get",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:internal/browser/launch.go",
+      "target": "function:internal/browser/launch.go:OpenURL",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:internal/browser/launch.go",
+      "target": "function:internal/browser/launch.go:OpenURLWithAlternate",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:internal/ipc/pipe.go",
+      "target": "function:internal/ipc/pipe.go:TryForward",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:internal/ipc/pipe.go",
+      "target": "function:internal/ipc/pipe.go:ListenAndServe",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:internal/logger/logger.go",
+      "target": "function:internal/logger/logger.go:Init",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:internal/logger/logger.go",
+      "target": "function:internal/logger/logger.go:Debug",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:internal/logger/logger.go",
+      "target": "function:internal/logger/logger.go:Info",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:internal/browser/icon_windows.go",
+      "target": "function:internal/browser/icon_windows.go:GetBrowserIcon",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:internal/browser/icon_windows.go",
+      "target": "function:internal/browser/icon_windows.go:GetBrowserIconAt",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:main.go",
+      "target": "file:app.go",
+      "type": "depends_on",
+      "direction": "forward",
+      "weight": 0.6
+    },
+    {
+      "source": "file:app.go",
+      "target": "file:internal/config/service.go",
+      "type": "depends_on",
+      "direction": "forward",
+      "weight": 0.6
+    },
+    {
+      "source": "file:app.go",
+      "target": "file:internal/browser/launch.go",
+      "type": "depends_on",
+      "direction": "forward",
+      "weight": 0.6
+    },
+    {
+      "source": "file:app.go",
+      "target": "file:internal/logger/logger.go",
+      "type": "depends_on",
+      "direction": "forward",
+      "weight": 0.6
+    },
+    {
+      "source": "file:main.go",
+      "target": "file:internal/config/service.go",
+      "type": "depends_on",
+      "direction": "forward",
+      "weight": 0.6
+    },
+    {
+      "source": "file:main.go",
+      "target": "file:internal/ipc/pipe.go",
+      "type": "depends_on",
+      "direction": "forward",
+      "weight": 0.6
+    },
+    {
+      "source": "file:main.go",
+      "target": "file:internal/logger/logger.go",
+      "type": "depends_on",
+      "direction": "forward",
+      "weight": 0.6
+    },
+    {
+      "source": "file:internal/config/service.go",
+      "target": "file:internal/config/types.go",
+      "type": "depends_on",
+      "direction": "forward",
+      "weight": 0.6
+    },
+    {
+      "source": "file:app.go",
+      "target": "file:internal/dwm/backdrop.go",
+      "type": "depends_on",
+      "direction": "forward",
+      "weight": 0.6
+    },
+    {
+      "source": "file:internal/dwm/backdrop_windows.go",
+      "target": "file:internal/dwm/backdrop.go",
+      "type": "depends_on",
+      "direction": "forward",
+      "weight": 0.6
+    },
+    {
+      "source": "file:app.go",
+      "target": "file:internal/browser/icon_windows.go",
+      "type": "depends_on",
+      "direction": "forward",
+      "weight": 0.6
+    },
+    {
+      "source": "file:docs/CONVENTIONS.md",
+      "target": "file:app.go",
+      "type": "documents",
+      "direction": "forward",
+      "weight": 0.5
+    },
+    {
+      "source": "file:docs/CONVENTIONS.md",
+      "target": "file:main.go",
+      "type": "documents",
+      "direction": "forward",
+      "weight": 0.5
+    },
+    {
+      "source": "file:go.mod",
+      "target": "file:app.go",
+      "type": "configures",
+      "direction": "forward",
+      "weight": 0.6
+    },
+    {
+      "source": "file:go.mod",
+      "target": "file:main.go",
+      "type": "configures",
+      "direction": "forward",
+      "weight": 0.6
+    },
+    {
+      "source": "file:go.sum",
+      "target": "file:go.mod",
+      "type": "depends_on",
+      "direction": "forward",
+      "weight": 0.6
+    },
+    {
+      "source": "file:frontend/src/App.vue",
+      "target": "file:frontend/src/views/SettingsView.vue",
+      "type": "import"
+    },
+    {
+      "source": "file:frontend/src/App.vue",
+      "target": "file:frontend/src/composables/useTheme.ts",
+      "type": "import"
+    },
+    {
+      "source": "file:frontend/src/components/BrowserList.vue",
+      "target": "module:frontend/src/utils/browser.ts",
+      "type": "import"
+    },
+    {
+      "source": "file:frontend/src/composables/useBrowserIcon.ts",
+      "target": "module:frontend/src/utils/browser.ts",
+      "type": "import"
+    },
+    {
+      "source": "file:frontend/src/main.ts",
+      "target": "file:frontend/src/App.vue",
+      "type": "import"
+    },
+    {
+      "source": "file:frontend/src/views/SettingsView.vue",
+      "target": "module:frontend/src/utils/browser.ts",
+      "type": "import",
+      "description": "Imports browser utility functions."
+    },
+    {
+      "source": "file:frontend/src/views/SettingsView.vue",
+      "target": "module:frontend/src/utils/config.ts",
+      "type": "import",
+      "description": "Imports normLayout function to normalize the selector layout string."
+    },
+    {
+      "source": "file:frontend/src/views/SettingsView.vue",
+      "target": "file:frontend/src/components/TimerBar.vue",
+      "type": "import",
+      "description": "Imports the TimerBar component (pre-resolved)."
+    },
+    {
+      "source": "file:frontend/src/views/SettingsView.vue",
+      "target": "file:frontend/src/composables/useTheme.ts",
+      "type": "import",
+      "description": "Imports applyTheme and applyAppearance composables for theme management."
+    },
+    {
+      "source": "file:frontend/src/views/SettingsView.vue",
+      "target": "file:frontend/src/themes/theme-default.css",
+      "type": "references",
+      "description": "Uses CSS custom properties (--substrate, --backdrop-blur, --accent, --ink-*, --hairline, --sidebar, --font-mono, --r-row, --color-sand, --color-danger, etc.) defined in the default theme."
+    },
+    {
+      "source": "file:frontend/src/views/SettingsView.vue",
+      "target": "file:frontend/src/themes/appearance-acrylic.css",
+      "type": "references",
+      "description": "Uses appearance-level CSS custom properties when acrylic is active."
+    },
+    {
+      "source": "file:frontend/src/views/SettingsView.vue",
+      "target": "file:frontend/src/themes/appearance-mica.css",
+      "type": "references",
+      "description": "Uses appearance-level CSS custom properties when mica is active."
+    },
+    {
+      "source": "config:frontend/vite.config.ts",
+      "target": "config:frontend/tsconfig.node.json",
+      "type": "references",
+      "description": "tsconfig.node.json is the composite TypeScript config that includes vite.config.ts."
+    },
+    {
+      "source": "config:frontend/tailwind.config.js",
+      "target": "file:frontend/src/views/SettingsView.vue",
+      "type": "scans",
+      "description": "Tailwind content scanner includes this Vue file for utility class extraction."
+    },
+    {
+      "source": "file:frontend/src/themes/appearance-acrylic.css",
+      "target": "file:frontend/src/themes/theme-default.css",
+      "type": "overrides",
+      "description": "Overrides surface opacity and backdrop blur defaults defined in theme-default.css with higher-opacity acrylic values."
+    },
+    {
+      "source": "file:frontend/src/themes/appearance-mica.css",
+      "target": "file:frontend/src/themes/theme-default.css",
+      "type": "overrides",
+      "description": "Overrides surface opacity and backdrop blur defaults defined in theme-default.css with lower-opacity mica values."
+    },
+    {
+      "source": "file:scripts/build.ps1",
+      "target": "file:Makefile",
+      "type": "reference",
+      "description": "build.ps1 is a PowerShell alternative to the Makefile for Windows builds"
+    },
+    {
+      "source": "file:build/windows/installer/installer.iss",
+      "target": "file:build/windows/installer/project.nsi",
+      "type": "reference",
+      "description": "both are Windows installer scripts (Inno Setup and NSIS respectively)"
+    },
+    {
+      "source": "file:build/windows/installer/project.nsi",
+      "target": "file:build/windows/installer/wails_tools.nsh",
+      "type": "import",
+      "description": "NSIS installer includes wails_tools.nsh"
+    },
+    {
+      "source": "file:build/darwin/Info.plist",
+      "target": "file:build/darwin/Info.dev.plist",
+      "type": "reference",
+      "description": "dev plist extends/variants of the base Info.plist"
+    },
+    {
+      "source": "file:build/windows/info.json",
+      "target": "file:build/windows/wails.exe.manifest",
+      "type": "reference",
+      "description": "both are Windows build metadata for the Wails binary"
+    },
+    {
+      "source": "file:wails.json",
+      "target": "file:build/windows/info.json",
+      "type": "reference",
+      "description": "wails.json references build metadata"
+    },
+    {
+      "source": "file:Makefile",
+      "target": "file:scripts/build.ps1",
+      "type": "reference",
+      "description": "Makefile has build targets; build.ps1 is the Windows alternative"
+    },
+    {
+      "source": "file:internal/registry/registry.go",
+      "target": "function:internal/registry/registry.go:Register",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:internal/registry/registry.go",
+      "target": "function:internal/registry/registry.go:Unregister",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:internal/registry/registry.go",
+      "target": "function:internal/registry/registry.go:OpenDefaultAppsSettings",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:internal/registry/registry.go",
+      "target": "function:internal/registry/registry.go:Register",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:internal/registry/registry.go",
+      "target": "function:internal/registry/registry.go:Unregister",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:internal/registry/registry.go",
+      "target": "function:internal/registry/registry.go:OpenDefaultAppsSettings",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:internal/rules/matcher.go",
+      "target": "function:internal/rules/matcher.go:Match",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:internal/rules/matcher.go",
+      "target": "function:internal/rules/matcher.go:Match",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:frontend/src/style.css",
+      "target": "file:frontend/src/components/BrowserButton.vue",
+      "type": "configures",
+      "direction": "forward",
+      "weight": 0.6
+    },
+    {
+      "source": "file:frontend/src/style.css",
+      "target": "file:frontend/src/components/BrowserDock.vue",
+      "type": "configures",
+      "direction": "forward",
+      "weight": 0.6
+    },
+    {
+      "source": "file:frontend/src/style.css",
+      "target": "file:frontend/src/components/BrowserDockTile.vue",
+      "type": "configures",
+      "direction": "forward",
+      "weight": 0.6
+    },
+    {
+      "source": "file:frontend/src/style.css",
+      "target": "file:frontend/src/components/BrowserEditor.vue",
+      "type": "configures",
+      "direction": "forward",
+      "weight": 0.6
+    },
+    {
+      "source": "file:frontend/src/style.css",
+      "target": "file:frontend/src/components/RulesetEditor.vue",
+      "type": "configures",
+      "direction": "forward",
+      "weight": 0.6
+    },
+    {
+      "source": "file:frontend/src/style.css",
+      "target": "file:frontend/src/components/UrlCard.vue",
+      "type": "configures",
+      "direction": "forward",
+      "weight": 0.6
+    },
+    {
+      "source": "file:frontend/src/style.css",
+      "target": "file:frontend/src/views/SelectorView.vue",
+      "type": "configures",
+      "direction": "forward",
+      "weight": 0.6
+    },
+    {
+      "source": "file:frontend/src/components/BrowserButton.vue",
+      "target": "file:frontend/src/types.ts",
+      "type": "depends_on",
+      "direction": "forward",
+      "weight": 0.6
+    },
+    {
+      "source": "file:frontend/src/components/BrowserDock.vue",
+      "target": "file:frontend/src/types.ts",
+      "type": "depends_on",
+      "direction": "forward",
+      "weight": 0.6
+    },
+    {
+      "source": "file:frontend/src/components/BrowserDock.vue",
+      "target": "file:frontend/src/components/BrowserDockTile.vue",
+      "type": "depends_on",
+      "direction": "forward",
+      "weight": 0.6
+    },
+    {
+      "source": "file:frontend/src/components/BrowserDockTile.vue",
+      "target": "file:frontend/src/types.ts",
+      "type": "depends_on",
+      "direction": "forward",
+      "weight": 0.6
+    },
+    {
+      "source": "file:frontend/src/components/BrowserEditor.vue",
+      "target": "file:frontend/src/types.ts",
+      "type": "depends_on",
+      "direction": "forward",
+      "weight": 0.6
+    },
+    {
+      "source": "file:frontend/src/components/RulesetEditor.vue",
+      "target": "file:frontend/src/types.ts",
+      "type": "depends_on",
+      "direction": "forward",
+      "weight": 0.6
+    },
+    {
+      "source": "file:frontend/src/components/UrlCard.vue",
+      "target": "file:frontend/src/types.ts",
+      "type": "depends_on",
+      "direction": "forward",
+      "weight": 0.6
+    },
+    {
+      "source": "file:frontend/src/views/SelectorView.vue",
+      "target": "file:frontend/src/types.ts",
+      "type": "depends_on",
+      "direction": "forward",
+      "weight": 0.6
+    },
+    {
+      "source": "file:frontend/src/views/SelectorView.vue",
+      "target": "file:frontend/src/components/BrowserDock.vue",
+      "type": "depends_on",
+      "direction": "forward",
+      "weight": 0.6
+    },
+    {
+      "source": "file:frontend/src/views/SelectorView.vue",
+      "target": "file:frontend/src/components/UrlCard.vue",
+      "type": "depends_on",
+      "direction": "forward",
+      "weight": 0.6
+    },
+    {
+      "source": "file:README.md",
+      "target": "file:internal/registry/registry.go",
+      "type": "documents",
+      "direction": "forward",
+      "weight": 0.5
+    },
+    {
+      "source": "file:README.md",
+      "target": "file:internal/rules/matcher.go",
+      "type": "documents",
+      "direction": "forward",
+      "weight": 0.5
+    },
+    {
+      "source": "file:README.md",
+      "target": "file:frontend/src/views/SelectorView.vue",
+      "type": "documents",
+      "direction": "forward",
+      "weight": 0.5
+    }
+  ],
+  "layers": [
+    {
+      "id": "layer:entry-config",
+      "name": "Entry & Configuration",
+      "description": "Application entry points, Wails configuration, Go module definitions, and build settings for the Switchy desktop application",
+      "nodeIds": [
+        "file:main.go",
+        "file:app.go",
+        "config:wails.json",
+        "config:go.mod",
+        "config:go.sum",
+        "config:.golangci.yml",
+        "file:go.mod",
+        "file:go.sum"
+      ]
+    },
+    {
+      "id": "layer:backend-services",
+      "name": "Backend Services",
+      "description": "Core Go services including browser detection, configuration persistence, Windows DWM visual effects, IPC communication, structured logging, Windows registry integration, and URL pattern matching",
+      "nodeIds": [
+        "file:internal/browser/icon_windows.go",
+        "file:internal/browser/launch.go",
+        "file:internal/config/service.go",
+        "file:internal/config/types.go",
+        "file:internal/dwm/backdrop.go",
+        "file:internal/dwm/backdrop_windows.go",
+        "file:internal/ipc/pipe.go",
+        "file:internal/logger/logger.go",
+        "file:internal/registry/registry.go",
+        "file:internal/rules/matcher.go"
+      ]
+    },
+    {
+      "id": "layer:frontend-ui",
+      "name": "Frontend UI",
+      "description": "Vue 3 components, views, TypeScript type definitions, and global styles for the browser selector interface",
+      "nodeIds": [
+        "file:frontend/src/components/BrowserButton.vue",
+        "file:frontend/src/components/BrowserDock.vue",
+        "file:frontend/src/components/BrowserDockTile.vue",
+        "file:frontend/src/components/BrowserEditor.vue",
+        "file:frontend/src/components/RulesetEditor.vue",
+        "file:frontend/src/components/UrlCard.vue",
+        "file:frontend/src/views/SelectorView.vue",
+        "file:frontend/src/types.ts",
+        "file:frontend/src/style.css"
+      ]
+    },
+    {
+      "id": "layer:documentation",
+      "name": "Documentation",
+      "description": "Project documentation including README, coding conventions, and development guidelines",
+      "nodeIds": [
+        "file:README.md",
+        "file:docs/CONVENTIONS.md"
+      ]
+    }
+  ],
+  "tour": [
+    {
+      "order": 1,
+      "title": "Project Overview",
+      "description": "Begin with the README to understand Switchy's purpose: a lightning-fast Windows browser picker that intercepts links and routes them to the right browser with zero friction. This document explains the core features, architecture strategy (Wails + Go + Vue 3), and how the application integrates with the Windows shell.",
+      "nodeIds": [
+        "document:README.md"
+      ]
+    },
+    {
+      "order": 2,
+      "title": "Application Bootstrap",
+      "description": "The main.go entry point is where the Go program starts. It handles CLI dispatch and routing between different execution modes (GUI vs. headless), setting up the foundation for everything that follows. This file is the first thing the operating system loads when Switchy starts.",
+      "nodeIds": [
+        "file:main.go"
+      ],
+      "languageLesson": "Go's func main() is the required entry point for executables. The package main and func main pattern is Go's standard convention for programs that compile to binaries rather than libraries."
+    },
+    {
+      "order": 3,
+      "title": "Core Application Controller",
+      "description": "The app.go file contains the Wails application controller, which is the heart of the desktop application. It manages the UI window lifecycle, orchestrates browser launching when users make a selection, and coordinates with other services like the rules matcher and config handler. This is where the click-to-launch flow comes alive.",
+      "nodeIds": [
+        "file:app.go"
+      ],
+      "languageLesson": "Wails controllers use struct methods to expose Go functions to the JavaScript frontend. The binding between Go and Vue 3 happens through this controller pattern, allowing frontend button clicks to trigger backend logic."
+    },
+    {
+      "order": 4,
+      "title": "Browser Launching Engine",
+      "description": "The launch.go file implements the core mechanics of finding installed browsers and spawning them with the intercepted URL. It handles path resolution across different Windows configurations, validation of browser executables, and error handling for cases where a browser is missing or launch fails. This service is called directly by the app controller after the user selects a browser.",
+      "nodeIds": [
+        "file:internal/browser/launch.go"
+      ]
+    },
+    {
+      "order": 5,
+      "title": "URL Matching & Routing Rules",
+      "description": "The matcher.go file is the rules engine that decides which browser should open for a given URL. It supports three matching strategies: exact domain rules, regex patterns for complex URLs, and substring matching for flexible rules. When a link is intercepted, this engine determines the target browser before launch.go takes over to execute it.",
+      "nodeIds": [
+        "file:internal/rules/matcher.go"
+      ],
+      "languageLesson": "Pattern matching engines often expose multiple rule types to users. Go's regexp package powers the regex matching here, while simple string operations handle domain and substring matching. Separating rule evaluation from execution keeps the code modular."
+    },
+    {
+      "order": 6,
+      "title": "Configuration Persistence",
+      "description": "The service.go file in the config package manages how Switchy persists user settings: browser preferences, rules, and application state. It handles reading from and writing to the Windows file system or registry, ensuring that user choices survive an application restart. This service is called by the app controller whenever settings change.",
+      "nodeIds": [
+        "file:internal/config/service.go"
+      ]
+    },
+    {
+      "order": 7,
+      "title": "Windows Icon Integration",
+      "description": "The icon_windows.go file is platform-specific code that extracts browser icons from Windows executable files. It showcases how Switchy tailors itself to Windows, pulling the actual browser icon from disk so the UI displays recognizable imagery. This is part of making the picker feel native and polished on Windows.",
+      "nodeIds": [
+        "file:internal/browser/icon_windows.go"
+      ],
+      "languageLesson": "Go supports platform-specific files through naming convention: files ending in _windows.go are compiled only on Windows builds. This allows the codebase to include Windows-specific APIs (like Windows executable parsing) without breaking cross-platform builds."
+    },
+    {
+      "order": 8,
+      "title": "Main UI View",
+      "description": "The SelectorView.vue component is the main visual interface that users interact with. It renders the browser dock, displays a countdown timer for auto-selection, and handles user input. When the app launches in GUI mode (from main.go), this Vue component is what appears on screen, connected to the backend via the Wails controller.",
+      "nodeIds": [
+        "file:frontend/src/views/SelectorView.vue"
+      ],
+      "languageLesson": "Vue 3 uses the Composition API with script setup syntax for cleaner component logic. The component lifecycle (mounted, updated) integrates with Wails to call backend Go functions and respond to timer events."
+    },
+    {
+      "order": 9,
+      "title": "Browser Dock Layout",
+      "description": "The BrowserDock.vue component is a reusable layout component that renders the horizontal dock of available browsers. It's used by SelectorView.vue to display clickable browser icons. By separating layout concerns from the main view, the code stays maintainable and the dock can be tested independently.",
+      "nodeIds": [
+        "file:frontend/src/components/BrowserDock.vue"
+      ],
+      "languageLesson": "Vue components follow a single-responsibility principle: BrowserDock handles only the visual layout and click handling for individual browser icons, while SelectorView handles the overall flow and timer logic. This separation makes both components easier to understand and test."
+    }
+  ]
+}

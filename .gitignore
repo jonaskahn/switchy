@@ -1,0 +1,45 @@
+# ── Build outputs ──────────────────────────────────────────────────────────────
+build/bin/
+dist/
+
+# ── Go ─────────────────────────────────────────────────────────────────────────
+vendor/
+*.exe
+*.test
+*.out
+coverage.txt
+coverage.html
+
+# ── Node / Frontend ────────────────────────────────────────────────────────────
+node_modules/
+frontend/dist/
+frontend/dist-ssr/
+frontend/.vite/
+frontend/.env
+frontend/.env.local
+frontend/.env.*.local
+frontend/package.json.md5
+
+# ── Wails generated bindings (regenerated on every `wails build/dev`) ──────────
+frontend/wailsjs/
+
+# ── OS / Editor ────────────────────────────────────────────────────────────────
+.DS_Store
+Thumbs.db
+desktop.ini
+.vscode/
+.idea/
+*.swp
+*~
+
+# ── Logs & temp ────────────────────────────────────────────────────────────────
+*.log
+*.tmp
+*.temp
+logs
+
+# ── Claude Code local settings (machine-specific permissions) ──────────────────
+.*claude/settings.local.json
+.*claude/worktrees
+
+CLAUDE.local.md

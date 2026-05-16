@@ -1,0 +1,21 @@
+/* ── Acrylic appearance ──────────────────────────────────────────────────────
+   Bold frosted-glass material. Strong blur, saturated tint, opaque surfaces.
+   All surface/tint values derive from theme color tokens via relative color
+   syntax — swapping the theme file automatically repaints every surface.
+   ─────────────────────────────────────────────────────────────────────────── */
+:root {
+  --backdrop-blur:   blur(40px) saturate(150%);
+  --backdrop-blur-h: blur(48px) saturate(160%);
+
+  --substrate:     rgb(from var(--color-surface) r g b / 0.84);
+  --substrate-top: rgb(from var(--color-surface-hi) r g b / 0.86);
+  --sidebar:       rgb(from var(--color-surface) r g b / 0.72);
+
+  --hairline:      rgb(from var(--color-sand) r g b / 0.07);
+  --hairline-hi:   rgb(from var(--color-sand) r g b / 0.14);
+
+  --ink-10:        rgb(from var(--color-sand) r g b / 0.06);
+  --ink-20:        rgb(from var(--color-sand) r g b / 0.14);
+
+  --accent-tint:   rgb(from var(--accent) r g b / 0.12);
+}

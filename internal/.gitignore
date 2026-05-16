@@ -1,0 +1,12 @@
+# ── Test binaries & coverage ───────────────────────────────────────────────────
+*.test
+*.out
+coverage.txt
+coverage.html
+
+# ── Go build cache (should live in GOCACHE, not the repo) ─────────────────────
+*.a
+
+# ── OS ─────────────────────────────────────────────────────────────────────────
+.DS_Store
+Thumbs.db

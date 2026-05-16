@@ -1,0 +1,62 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" width="256" height="256">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="256" y2="256" gradientUnits="userSpaceOnUse">
+      <stop offset="0%"   stop-color="#4C1D95"/>
+      <stop offset="45%"  stop-color="#2563EB"/>
+      <stop offset="100%" stop-color="#06B6D4"/>
+    </linearGradient>
+
+    <!-- Clip to the rounded-rect shape so glow never bleeds outside the corners -->
+    <clipPath id="shape">
+      <rect width="256" height="256" rx="52"/>
+    </clipPath>
+
+    <!--
+      Single glow filter in userSpaceOnUse coordinates covering the full canvas.
+      This avoids the "zero bounding-box height" problem that occurs when
+      percentage-based filter regions are applied to horizontal lines.
+    -->
+    <filter id="glow" filterUnits="userSpaceOnUse" x="0" y="0" width="256" height="256">
+      <feGaussianBlur stdDeviation="7"/>
+    </filter>
+  </defs>
+
+  <g clip-path="url(#shape)">
+    <!-- Background gradient -->
+    <rect width="256" height="256" fill="url(#bg)"/>
+    <!-- Subtle glass top-highlight -->
+    <rect x="1" y="1" width="254" height="108" fill="white" fill-opacity="0.07"/>
+
+    <!-- ── GLOW LAYER (blurred, drawn first) ─────────────────────────────── -->
+    <!-- Hub uses a larger radius to produce a stronger centre bloom -->
+    <g filter="url(#glow)" opacity="0.85">
+      <circle cx="108" cy="128" r="32" fill="white"/>
+      <line   x1="22"  y1="128" x2="90"  y2="128" stroke="white" stroke-width="8" stroke-linecap="round"/>
+      <path   d="M126 112 Q163 86  196 58"  stroke="white" stroke-width="8" stroke-linecap="round" fill="none"/>
+      <circle cx="207" cy="50"  r="20" fill="white"/>
+      <line   x1="130" y1="128" x2="200" y2="128" stroke="white" stroke-width="8" stroke-linecap="round"/>
+      <circle cx="213" cy="128" r="20" fill="white"/>
+      <path   d="M126 144 Q163 170 196 198" stroke="white" stroke-width="8" stroke-linecap="round" fill="none"/>
+      <circle cx="207" cy="206" r="20" fill="white"/>
+    </g>
+
+    <!-- ── SHARP LAYER (crisp, drawn on top) ─────────────────────────────── -->
+    <!-- Input stem -->
+    <line x1="22" y1="128" x2="90" y2="128"
+          stroke="white" stroke-width="7" stroke-linecap="round" stroke-opacity="0.55"/>
+    <!-- Hub -->
+    <circle cx="108" cy="128" r="22" fill="white"/>
+    <!-- Top branch + dot -->
+    <path d="M126 112 Q163 86 196 58"
+          stroke="white" stroke-width="7" stroke-linecap="round" fill="none" stroke-opacity="0.85"/>
+    <circle cx="207" cy="50"  r="16" fill="white" fill-opacity="0.85"/>
+    <!-- Middle branch + dot -->
+    <line x1="130" y1="128" x2="200" y2="128"
+          stroke="white" stroke-width="7" stroke-linecap="round" stroke-opacity="0.85"/>
+    <circle cx="213" cy="128" r="16" fill="white" fill-opacity="0.90"/>
+    <!-- Bottom branch + dot -->
+    <path d="M126 144 Q163 170 196 198"
+          stroke="white" stroke-width="7" stroke-linecap="round" fill="none" stroke-opacity="0.85"/>
+    <circle cx="207" cy="206" r="16" fill="white" fill-opacity="0.85"/>
+  </g>
+</svg>

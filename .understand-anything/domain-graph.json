@@ -1,0 +1,836 @@
+{
+  "domains": [
+    {
+      "id": "domain:url-interception",
+      "name": "URL Interception & Routing",
+      "description": "Handles interception of clicked links and routing them through the browser selector or automatic rules engine. Integrates with Windows registry to register Switchy as a URL protocol handler.",
+      "tags": ["url-handling", "protocol-handler", "windows-integration"],
+      "components": [
+        "file:main.go",
+        "file:app.go",
+        "file:internal/registry/registry.go",
+        "file:internal/ipc/pipe.go",
+        "function:main.go:runSelector",
+        "function:app.go:GetURL",
+        "function:app.go:SetURL",
+        "function:app.go:PushURL"
+      ]
+    },
+    {
+      "id": "domain:browser-selection",
+      "name": "Browser Selection & Launching",
+      "description": "Core business logic for selecting and launching browsers with the current URL. Manages browser inventory, launches processes with appropriate arguments, handles alternate browser profiles and configurations.",
+      "tags": ["browser-launching", "process-management", "launch-profiles"],
+      "components": [
+        "file:app.go",
+        "file:internal/browser/launch.go",
+        "file:internal/config/types.go",
+        "file:internal/config/service.go",
+        "function:app.go:GetBrowsers",
+        "function:app.go:OpenWithBrowser",
+        "function:app.go:OpenWithAlternate",
+        "function:internal/browser/launch.go:OpenURL",
+        "function:internal/browser/launch.go:OpenURLWithAlternate"
+      ]
+    },
+    {
+      "id": "domain:rule-engine",
+      "name": "URL Routing Rules & Automation",
+      "description": "Implements automatic URL-to-browser routing based on user-defined rules. Supports pattern matching by domain, regex, string containment, and forces manual selection when needed.",
+      "tags": ["pattern-matching", "automation", "rule-evaluation"],
+      "components": [
+        "file:internal/rules/matcher.go",
+        "file:main.go",
+        "function:main.go:autoRule",
+        "class:config.go:Rule",
+        "class:config.go:Ruleset"
+      ]
+    },
+    {
+      "id": "domain:configuration",
+      "name": "Settings & Configuration Management",
+      "description": "Persists and manages user configuration including browser list, rules, appearance settings, and application preferences. Provides caching and default value handling.",
+      "tags": ["persistence", "data-model", "preferences"],
+      "components": [
+        "file:internal/config/service.go",
+        "file:internal/config/types.go",
+        "function:internal/config/service.go:Load",
+        "function:internal/config/service.go:Get",
+        "function:app.go:GetSettings"
+      ]
+    },
+    {
+      "id": "domain:browser-detection",
+      "name": "Browser Detection & Inventory",
+      "description": "Discovers installed browsers on the system via Windows registry scanning, extracts browser metadata (icons, launch paths, profiles), and maintains the browser inventory.",
+      "tags": ["system-integration", "registry-scanning", "profile-detection"],
+      "components": [
+        "file:internal/browser/launch.go",
+        "file:internal/browser/icon_windows.go",
+        "function:internal/browser/launch.go:DetectInstalled",
+        "function:internal/browser/launch.go:detectChromiumProfiles",
+        "function:internal/browser/launch.go:GetBrowserIcon",
+        "function:internal/browser/launch.go:GetBrowserIconAt"
+      ]
+    },
+    {
+      "id": "domain:windows-integration",
+      "name": "Windows System Integration",
+      "description": "Handles Windows-specific functionality including registry manipulation for protocol handler registration, window management, DWM backdrop effects, and system process launching.",
+      "tags": ["windows-api", "registry", "window-management"],
+      "components": [
+        "file:internal/registry/registry.go",
+        "file:internal/dwm/backdrop.go",
+        "file:internal/dwm/backdrop_windows.go",
+        "file:app.go",
+        "function:app.go:RegisterAsDefault",
+        "function:app.go:UnregisterAsDefault",
+        "function:app.go:GetWorkArea",
+        "function:app.go:ResizeSelector"
+      ]
+    },
+    {
+      "id": "domain:ui-framework",
+      "name": "User Interface & Rendering",
+      "description": "Vue 3 frontend providing browser selector UI, settings configuration interface, and real-time theme/appearance switching. Wails bridges Go backend with web-based UI.",
+      "tags": ["vue3", "frontend", "ui-rendering"],
+      "components": [
+        "file:frontend/src/App.vue",
+        "file:frontend/src/views/SelectorView.vue",
+        "file:frontend/src/views/SettingsView.vue",
+        "file:frontend/src/components/BrowserList.vue",
+        "file:frontend/src/components/BrowserButton.vue",
+        "file:frontend/src/composables/useTheme.ts",
+        "file:frontend/src/composables/useBrowserIcon.ts"
+      ]
+    },
+    {
+      "id": "domain:ipc",
+      "name": "Inter-Process Communication",
+      "description": "Enables single-instance enforcement via named pipes. Forwards URLs from new process invocations to the existing Switchy instance for seamless multi-click handling.",
+      "tags": ["named-pipes", "process-communication", "single-instance"],
+      "components": [
+        "file:internal/ipc/pipe.go",
+        "function:internal/ipc/pipe.go:TryForward",
+        "function:internal/ipc/pipe.go:ListenAndServe"
+      ]
+    },
+    {
+      "id": "domain:logging",
+      "name": "Observability & Logging",
+      "description": "Structured logging service for debugging and operational insight. Provides leveled logging (debug, info, warn, error) with file-based output.",
+      "tags": ["observability", "logging", "debugging"],
+      "components": [
+        "file:internal/logger/logger.go",
+        "function:internal/logger/logger.go:Init",
+        "function:internal/logger/logger.go:Debug",
+        "function:internal/logger/logger.go:Info"
+      ]
+    }
+  ],
+  "flows": [
+    {
+      "id": "flow:url-interception-manual",
+      "name": "URL Interception → Manual Browser Selection",
+      "description": "User clicks a link, Switchy intercepts it. No matching rule found or rules disabled. User sees browser picker and selects one.",
+      "entry_point": "User clicks http(s) link in browser, triggering registered Switchy handler",
+      "steps": [
+        "step:url-handler-invoke",
+        "step:ipc-forward-attempt",
+        "step:auto-rule-evaluation",
+        "step:selector-ui-display",
+        "step:browser-selection-ui",
+        "step:browser-launch",
+        "step:app-exit"
+      ],
+      "exit_point": "Selected browser opens with URL, Switchy exits"
+    },
+    {
+      "id": "flow:url-interception-auto",
+      "name": "URL Interception → Automatic Rule Routing",
+      "description": "User clicks link, Switchy intercepts it. Matching rule found and rules enabled. Browser launches automatically without UI.",
+      "entry_point": "User clicks http(s) link in browser, triggering registered Switchy handler",
+      "steps": [
+        "step:url-handler-invoke",
+        "step:ipc-forward-attempt",
+        "step:auto-rule-evaluation",
+        "step:browser-match-found",
+        "step:browser-launch",
+        "step:app-exit"
+      ],
+      "exit_point": "Matched browser opens with URL, Switchy exits silently"
+    },
+    {
+      "id": "flow:browser-detection",
+      "name": "Browser Detection & Inventory",
+      "description": "System scans for installed browsers, extracts metadata, builds inventory with icons and launch configurations. Triggered on startup or manual refresh.",
+      "entry_point": "App startup or user triggers 'Detect Browsers' action",
+      "steps": [
+        "step:registry-scan",
+        "step:browser-metadata-extract",
+        "step:profile-detection",
+        "step:icon-extraction",
+        "step:deduplication",
+        "step:inventory-cache"
+      ],
+      "exit_point": "Browser list saved to configuration, available for selection"
+    },
+    {
+      "id": "flow:settings-configuration",
+      "name": "Settings Configuration & Persistence",
+      "description": "User opens Settings UI, modifies rules, browser visibility, appearance, and saves. Configuration persisted to disk with validation.",
+      "entry_point": "User opens Settings window (--settings flag or from selector)",
+      "steps": [
+        "step:settings-ui-load",
+        "step:config-load",
+        "step:settings-display",
+        "step:user-edit-rules",
+        "step:user-edit-appearance",
+        "step:config-save",
+        "step:app-exit"
+      ],
+      "exit_point": "Configuration persisted, changes take effect on next URL"
+    },
+    {
+      "id": "flow:registration",
+      "name": "Registration as Default URL Handler",
+      "description": "Admin operation to register Switchy as the system's http/https protocol handler. Modifies Windows registry to route clicked links through Switchy.",
+      "entry_point": "User runs: switchy.exe --register",
+      "steps": [
+        "step:registry-client-write",
+        "step:registry-progid-write",
+        "step:registry-capabilities-write",
+        "step:registry-url-associations-write",
+        "step:registry-shell-command-write",
+        "step:registry-application-write",
+        "step:default-apps-settings-open"
+      ],
+      "exit_point": "Windows Settings opens for user confirmation"
+    },
+    {
+      "id": "flow:unregistration",
+      "name": "Unregistration as Default URL Handler",
+      "description": "Admin operation to remove Switchy from system URL protocol handling. Cleans up Windows registry entries.",
+      "entry_point": "User runs: switchy.exe --unregister",
+      "steps": [
+        "step:registry-cleanup-url-associations",
+        "step:registry-cleanup-capabilities",
+        "step:registry-cleanup-shell",
+        "step:registry-cleanup-client",
+        "step:registry-cleanup-progid",
+        "step:registry-cleanup-applications"
+      ],
+      "exit_point": "Registry cleaned, Switchy no longer handles links"
+    },
+    {
+      "id": "flow:single-instance",
+      "name": "Single Instance Enforcement",
+      "description": "When user clicks a link and another Switchy instance is already running, the new invocation forwards the URL to existing instance and exits.",
+      "entry_point": "User clicks link while Switchy selector already open",
+      "steps": [
+        "step:second-process-spawn",
+        "step:ipc-connection-attempt",
+        "step:url-message-encode",
+        "step:ipc-url-forward",
+        "step:first-process-receive",
+        "step:first-process-url-update",
+        "step:second-process-exit"
+      ],
+      "exit_point": "URL added to existing selector, second process exits"
+    },
+    {
+      "id": "flow:alternate-launch",
+      "name": "Alternate Browser Launch Profile",
+      "description": "User selects an alternate launch configuration for a browser (e.g., Private/Incognito mode). Browser launches with profile-specific arguments.",
+      "entry_point": "User selects alternate profile option in browser selector UI",
+      "steps": [
+        "step:alternate-selection",
+        "step:alternate-config-lookup",
+        "step:alternate-args-build",
+        "step:browser-launch-with-alternate",
+        "step:app-exit"
+      ],
+      "exit_point": "Browser opens with alternate launch arguments (private mode, etc)"
+    }
+  ],
+  "steps": [
+    {
+      "id": "step:url-handler-invoke",
+      "name": "URL Handler Invocation",
+      "description": "Windows registry directs clicked link to Switchy executable with URL as command-line argument",
+      "input": "URL string from Windows link click",
+      "output": "Process invocation with URL argument",
+      "components": ["file:main.go", "function:main.go:firstURL"]
+    },
+    {
+      "id": "step:ipc-forward-attempt",
+      "name": "IPC Forward Attempt",
+      "description": "New process attempts to connect to named pipe and forward URL to existing instance",
+      "input": "URL string",
+      "output": "Boolean success flag (true = forwarded, false = no existing instance)",
+      "components": ["file:internal/ipc/pipe.go", "function:internal/ipc/pipe.go:TryForward"]
+    },
+    {
+      "id": "step:auto-rule-evaluation",
+      "name": "Automatic Rule Matching",
+      "description": "System evaluates all enabled rules against the URL using pattern matching (domain, regex, string match). Returns matching browser name or empty string.",
+      "input": "URL string, Ruleset array from configuration",
+      "output": "Browser name string, empty string, or ForcePickerBrowser sentinel",
+      "components": ["file:internal/rules/matcher.go", "function:main.go:autoRule"]
+    },
+    {
+      "id": "step:browser-match-found",
+      "name": "Browser Match Resolution",
+      "description": "Rule match result indicates specific browser should launch. Browser config looked up and prepared for launching.",
+      "input": "Browser name from rule match",
+      "output": "Browser configuration object ready for launch",
+      "components": ["file:app.go", "function:app.go:OpenWithBrowser"]
+    },
+    {
+      "id": "step:selector-ui-display",
+      "name": "Selector UI Display",
+      "description": "Wails application launches with selector UI. Loads settings and browser list from backend, renders Vue selector component.",
+      "input": "URL to display, App mode, Wails context",
+      "output": "Running Wails window with Vue selector UI",
+      "components": [
+        "function:main.go:runSelector",
+        "file:frontend/src/App.vue",
+        "file:frontend/src/views/SelectorView.vue"
+      ]
+    },
+    {
+      "id": "step:browser-selection-ui",
+      "name": "Browser Selection UI Interaction",
+      "description": "User sees list of browsers, selects one via mouse click or keyboard shortcut (1-9). Frontend emits event to backend.",
+      "input": "User interaction (click or key press), browser list from backend",
+      "output": "Browser selection event with browser name",
+      "components": [
+        "file:frontend/src/components/BrowserList.vue",
+        "file:frontend/src/components/BrowserButton.vue",
+        "file:frontend/src/utils/browser.ts"
+      ]
+    },
+    {
+      "id": "step:browser-launch",
+      "name": "Browser Process Launch",
+      "description": "Selected browser executable launched with URL and configured launch arguments. For UWP apps, routes through explorer.exe.",
+      "input": "Browser config object, URL string",
+      "output": "Running browser process",
+      "components": [
+        "file:internal/browser/launch.go",
+        "function:internal/browser/launch.go:OpenURL",
+        "function:internal/browser/launch.go:buildArgs"
+      ]
+    },
+    {
+      "id": "step:app-exit",
+      "name": "Switchy Exit",
+      "description": "Switchy application terminates after browser launch or error. Selector window closes.",
+      "input": "Browser launch completion or error state",
+      "output": "Process exit, selector window closed",
+      "components": ["file:app.go", "function:app.go:OpenWithBrowser"]
+    },
+    {
+      "id": "step:registry-scan",
+      "name": "Windows Registry Scan",
+      "description": "Scans HKLM and HKCU registry hives under SOFTWARE\\Clients\\StartMenuInternet to find installed browsers.",
+      "input": "Registry root key",
+      "output": "List of browser registry entry names",
+      "components": [
+        "file:internal/browser/launch.go",
+        "function:internal/browser/launch.go:DetectInstalled"
+      ]
+    },
+    {
+      "id": "step:browser-metadata-extract",
+      "name": "Browser Metadata Extraction",
+      "description": "For each detected browser, reads registry to extract display name, executable path, and icon specification.",
+      "input": "Browser registry entry name",
+      "output": "Browser config object with name, exePath, iconSpec",
+      "components": [
+        "file:internal/browser/launch.go",
+        "function:internal/browser/launch.go:readBrowserEntry",
+        "function:internal/browser/launch.go:readDisplayName",
+        "function:internal/browser/launch.go:readExePath"
+      ]
+    },
+    {
+      "id": "step:profile-detection",
+      "name": "Chromium Profile Detection",
+      "description": "For Chromium-based browsers (Chrome, Edge, Brave), detects individual user profiles and creates profile-specific browser entries.",
+      "input": "Base browser config object",
+      "output": "Array of profile-specific browser entries",
+      "components": [
+        "file:internal/browser/launch.go",
+        "function:internal/browser/launch.go:detectChromiumProfiles",
+        "function:internal/browser/launch.go:makeProfileBrowser"
+      ]
+    },
+    {
+      "id": "step:icon-extraction",
+      "name": "Browser Icon Extraction",
+      "description": "Extracts icon from browser executable file using Windows API calls. Returns base64-encoded PNG for UI display.",
+      "input": "Browser executable path, optional pixel size",
+      "output": "Base64-encoded PNG icon data URL",
+      "components": [
+        "file:internal/browser/icon_windows.go",
+        "function:internal/browser/icon_windows.go:GetBrowserIcon",
+        "function:internal/browser/icon_windows.go:GetBrowserIconAt"
+      ]
+    },
+    {
+      "id": "step:deduplication",
+      "name": "Browser Deduplication",
+      "description": "Removes duplicate browser entries (same name+exe) found in multiple registry locations. Preserves Chrome profiles with distinct names.",
+      "input": "Full browser list from registry scan",
+      "output": "Deduplicated browser list",
+      "components": [
+        "file:internal/browser/launch.go",
+        "function:internal/browser/launch.go:deduplicate"
+      ]
+    },
+    {
+      "id": "step:inventory-cache",
+      "name": "Inventory Caching",
+      "description": "Detected browser list is saved to configuration file and cached in memory for fast retrieval during URL selection.",
+      "input": "Deduplicated browser list",
+      "output": "Persisted config file with browser list",
+      "components": [
+        "file:internal/config/service.go",
+        "function:internal/config/service.go:Save"
+      ]
+    },
+    {
+      "id": "step:settings-ui-load",
+      "name": "Settings UI Load",
+      "description": "Wails application launches in settings mode. Loads current configuration from disk. Frontend renders SettingsView component.",
+      "input": "Settings flag, Wails context",
+      "output": "Running Wails window with settings UI",
+      "components": [
+        "function:main.go:runSettings",
+        "file:frontend/src/views/SettingsView.vue"
+      ]
+    },
+    {
+      "id": "step:config-load",
+      "name": "Configuration Load",
+      "description": "Current configuration (browsers, rules, settings) loaded from disk JSON file. Defaults applied if file missing.",
+      "input": "Config file path",
+      "output": "UserSettings object in memory",
+      "components": [
+        "file:internal/config/service.go",
+        "function:internal/config/service.go:Load"
+      ]
+    },
+    {
+      "id": "step:settings-display",
+      "name": "Settings Display",
+      "description": "Settings UI renders current configuration values including rules, browser visibility toggles, appearance settings, etc.",
+      "input": "Loaded UserSettings object",
+      "output": "Settings form populated with current values",
+      "components": [
+        "file:frontend/src/views/SettingsView.vue",
+        "function:app.go:GetSettings",
+        "function:app.go:GetBrowsers"
+      ]
+    },
+    {
+      "id": "step:user-edit-rules",
+      "name": "User Edit Rules",
+      "description": "User modifies rules in settings UI - adds, removes, or edits pattern-to-browser mappings. Changes reflected in UI immediately.",
+      "input": "User interactions (add/remove/edit rules)",
+      "output": "Modified ruleset array in UI state",
+      "components": ["file:frontend/src/views/SettingsView.vue"]
+    },
+    {
+      "id": "step:user-edit-appearance",
+      "name": "User Edit Appearance",
+      "description": "User changes theme, appearance (Acrylic/Mica), selector layout, and other visual preferences.",
+      "input": "User interactions (radio buttons, dropdowns)",
+      "output": "Modified AppSettings in UI state",
+      "components": ["file:frontend/src/views/SettingsView.vue"]
+    },
+    {
+      "id": "step:config-save",
+      "name": "Configuration Save",
+      "description": "Modified configuration serialized to JSON and written to disk. All user changes persisted.",
+      "input": "Modified UserSettings object",
+      "output": "Updated config JSON file",
+      "components": [
+        "file:internal/config/service.go",
+        "function:internal/config/service.go:Save"
+      ]
+    },
+    {
+      "id": "step:registry-client-write",
+      "name": "Write Registry Client Entry",
+      "description": "Creates HKLM SOFTWARE\\Clients\\StartMenuInternet\\Switchy registry key with client name.",
+      "input": "Switchy executable path",
+      "output": "Registry key created",
+      "components": [
+        "file:internal/registry/registry.go",
+        "function:internal/registry/registry.go:writeClient"
+      ]
+    },
+    {
+      "id": "step:registry-progid-write",
+      "name": "Write Registry ProgID Entry",
+      "description": "Creates HKLM SOFTWARE\\Classes\\SwitchyHTML registry key pointing to Switchy executable for URL handling.",
+      "input": "Switchy executable path",
+      "output": "Registry ProgID key created",
+      "components": [
+        "file:internal/registry/registry.go",
+        "function:internal/registry/registry.go:writeProgID"
+      ]
+    },
+    {
+      "id": "step:registry-capabilities-write",
+      "name": "Write Registry Capabilities Entry",
+      "description": "Creates Capabilities registry key with application description and name for Windows Default Apps.",
+      "input": "Capabilities registry path",
+      "output": "Registry capabilities key created",
+      "components": [
+        "file:internal/registry/registry.go",
+        "function:internal/registry/registry.go:writeCapabilities"
+      ]
+    },
+    {
+      "id": "step:registry-url-associations-write",
+      "name": "Write Registry URL Associations",
+      "description": "Registers http and https protocols to route through SwitchyHTML ProgID in registry.",
+      "input": "Capabilities registry path",
+      "output": "Registry URLAssociations key created",
+      "components": [
+        "file:internal/registry/registry.go",
+        "function:internal/registry/registry.go:writeURLAssociations"
+      ]
+    },
+    {
+      "id": "step:registry-shell-command-write",
+      "name": "Write Registry Shell Command Entry",
+      "description": "Registers shell\\open\\command in registry to invoke Switchy.exe with URL placeholder.",
+      "input": "Registry base path, executable path",
+      "output": "Registry shell command key created",
+      "components": [
+        "file:internal/registry/registry.go",
+        "function:internal/registry/registry.go:writeShellOpenCommand"
+      ]
+    },
+    {
+      "id": "step:registry-application-write",
+      "name": "Write Registry Application Entry",
+      "description": "Adds Switchy to Windows RegisteredApplications registry for visibility in Settings.",
+      "input": "Capabilities registry path",
+      "output": "Registry application entry created",
+      "components": [
+        "file:internal/registry/registry.go",
+        "function:internal/registry/registry.go:writeRegisteredApplication"
+      ]
+    },
+    {
+      "id": "step:default-apps-settings-open",
+      "name": "Open Default Apps Settings",
+      "description": "Launches Windows Settings Default Apps page to allow user to confirm Switchy as default handler.",
+      "input": "None",
+      "output": "Windows Settings window opened",
+      "components": [
+        "file:internal/registry/registry.go",
+        "function:internal/registry/registry.go:OpenDefaultAppsSettings"
+      ]
+    },
+    {
+      "id": "step:registry-cleanup-url-associations",
+      "name": "Registry Cleanup: URL Associations",
+      "description": "Deletes URLAssociations registry key to remove http/https associations.",
+      "input": "Registry path to clean",
+      "output": "Registry key deleted",
+      "components": [
+        "file:internal/registry/registry.go",
+        "function:internal/registry/registry.go:Unregister"
+      ]
+    },
+    {
+      "id": "step:registry-cleanup-capabilities",
+      "name": "Registry Cleanup: Capabilities",
+      "description": "Deletes Capabilities registry key and children.",
+      "input": "Registry path to clean",
+      "output": "Registry key deleted",
+      "components": ["file:internal/registry/registry.go"]
+    },
+    {
+      "id": "step:registry-cleanup-shell",
+      "name": "Registry Cleanup: Shell Commands",
+      "description": "Deletes shell\\open\\command and parent keys from registry.",
+      "input": "Registry path to clean",
+      "output": "Registry keys deleted",
+      "components": ["file:internal/registry/registry.go"]
+    },
+    {
+      "id": "step:registry-cleanup-client",
+      "name": "Registry Cleanup: Client Entry",
+      "description": "Deletes Switchy client registry entry from StartMenuInternet.",
+      "input": "Registry path to clean",
+      "output": "Registry key deleted",
+      "components": ["file:internal/registry/registry.go"]
+    },
+    {
+      "id": "step:registry-cleanup-progid",
+      "name": "Registry Cleanup: ProgID Entry",
+      "description": "Deletes SwitchyHTML ProgID registry entry from Classes.",
+      "input": "Registry path to clean",
+      "output": "Registry key deleted",
+      "components": ["file:internal/registry/registry.go"]
+    },
+    {
+      "id": "step:registry-cleanup-applications",
+      "name": "Registry Cleanup: Registered Applications",
+      "description": "Removes Switchy from RegisteredApplications registry list.",
+      "input": "Registry path to clean",
+      "output": "Registry entry removed",
+      "components": ["file:internal/registry/registry.go"]
+    },
+    {
+      "id": "step:second-process-spawn",
+      "name": "Second Process Spawned",
+      "description": "User clicks link while Switchy already running. Windows registry spawns new Switchy.exe process with URL argument.",
+      "input": "User link click, existing Switchy process running",
+      "output": "New Switchy process with URL argument",
+      "components": ["file:main.go"]
+    },
+    {
+      "id": "step:ipc-connection-attempt",
+      "name": "IPC Connection Attempt",
+      "description": "New process attempts to connect to named pipe \\\\\\\\?pipe\\\\SwitchyPipe with 2-second timeout.",
+      "input": "Named pipe name, timeout duration",
+      "output": "Connected pipe handle or error",
+      "components": [
+        "file:internal/ipc/pipe.go",
+        "function:internal/ipc/pipe.go:TryForward"
+      ]
+    },
+    {
+      "id": "step:url-message-encode",
+      "name": "URL Message Encoding",
+      "description": "URL wrapped in JSON Message struct and encoded for transmission over named pipe.",
+      "input": "URL string",
+      "output": "JSON-encoded message bytes",
+      "components": ["file:internal/ipc/pipe.go"]
+    },
+    {
+      "id": "step:ipc-url-forward",
+      "name": "IPC URL Forward",
+      "description": "Encoded URL message transmitted through named pipe to listening process.",
+      "input": "JSON-encoded message, pipe connection",
+      "output": "Message delivered or error",
+      "components": [
+        "file:internal/ipc/pipe.go",
+        "function:internal/ipc/pipe.go:TryForward"
+      ]
+    },
+    {
+      "id": "step:first-process-receive",
+      "name": "First Process Receives Message",
+      "description": "Original Switchy instance listening on named pipe receives URL message from new process.",
+      "input": "Incoming pipe connection with message data",
+      "output": "Decoded URL message",
+      "components": [
+        "file:internal/ipc/pipe.go",
+        "function:internal/ipc/pipe.go:ListenAndServe"
+      ]
+    },
+    {
+      "id": "step:first-process-url-update",
+      "name": "First Process Updates URL",
+      "description": "Running Switchy instance receives forwarded URL, updates internal URL state, and triggers UI event to display new URL in selector.",
+      "input": "Decoded URL string",
+      "output": "Internal URL state updated, UI event emitted",
+      "components": [
+        "file:app.go",
+        "function:app.go:PushURL",
+        "function:main.go:runSelector"
+      ]
+    },
+    {
+      "id": "step:second-process-exit",
+      "name": "Second Process Exits",
+      "description": "New process exits after successful URL forward, main.go returns early.",
+      "input": "Successful forward operation",
+      "output": "Process termination",
+      "components": ["file:main.go"]
+    },
+    {
+      "id": "step:alternate-selection",
+      "name": "Alternate Profile Selection",
+      "description": "User selects an alternate launch profile option (e.g., 'Private Window') from browser button context menu in UI.",
+      "input": "User interaction (context menu or button secondary click)",
+      "output": "Alternate selection event with browser name and profile name",
+      "components": ["file:frontend/src/components/BrowserButton.vue"]
+    },
+    {
+      "id": "step:alternate-config-lookup",
+      "name": "Alternate Config Lookup",
+      "description": "Backend searches browser's AlternateLaunches array for matching alternate launch configuration by name.",
+      "input": "Browser name, alternate name",
+      "output": "Alternate launch configuration or error",
+      "components": [
+        "file:app.go",
+        "function:app.go:OpenWithAlternate",
+        "file:internal/config/types.go"
+      ]
+    },
+    {
+      "id": "step:alternate-args-build",
+      "name": "Alternate Arguments Build",
+      "description": "Launch arguments from alternate configuration combined with URL to create process command line.",
+      "input": "Alternate launch args, URL",
+      "output": "Complete argument array",
+      "components": [
+        "file:internal/browser/launch.go",
+        "function:internal/browser/launch.go:buildArgs"
+      ]
+    },
+    {
+      "id": "step:browser-launch-with-alternate",
+      "name": "Browser Launch with Alternate Profile",
+      "description": "Browser executable launched with alternate arguments (e.g., --private-window, --new-private-window for different browsers).",
+      "input": "Browser executable path, alternate arguments, URL",
+      "output": "Running browser process in alternate mode",
+      "components": [
+        "file:internal/browser/launch.go",
+        "function:internal/browser/launch.go:OpenURLWithAlternate"
+      ]
+    }
+  ],
+  "entry_points": [
+    {
+      "id": "entry:windows-link-click",
+      "name": "Windows Link Click",
+      "description": "User clicks http(s) link in any Windows application. Windows registry routes to Switchy executable via registered protocol handler.",
+      "trigger": "User action - click link in browser, email client, document, etc.",
+      "handler": "file:main.go - main() function routes to runSelector() with URL argument"
+    },
+    {
+      "id": "entry:settings-flag",
+      "name": "Settings Window Launch",
+      "description": "Switchy launched with --settings flag to open configuration UI.",
+      "trigger": "User action - click 'Settings' button in selector or direct execution",
+      "handler": "file:main.go - main() function detects flag and calls runSettings()"
+    },
+    {
+      "id": "entry:register-flag",
+      "name": "Registration Operation",
+      "description": "Switchy launched with --register flag to register as default URL handler.",
+      "trigger": "User action - 'Install as Default Browser' in installer or manual command",
+      "handler": "file:main.go - main() function detects flag and calls handleRegister()"
+    },
+    {
+      "id": "entry:unregister-flag",
+      "name": "Unregistration Operation",
+      "description": "Switchy launched with --unregister flag to remove from default URL handler.",
+      "trigger": "User action - 'Uninstall' or manual command",
+      "handler": "file:main.go - main() function detects flag and calls handleUnregister()"
+    },
+    {
+      "id": "entry:ipc-message",
+      "name": "IPC URL Forward Message",
+      "description": "Existing Switchy instance receives forwarded URL from new process via named pipe.",
+      "trigger": "New process invocation of Switchy while instance already running",
+      "handler": "file:internal/ipc/pipe.go - ListenAndServe() listens for messages"
+    }
+  ],
+  "layers": [
+    {
+      "id": "layer:entry",
+      "name": "Entry Point",
+      "description": "Process bootstrap and command-line argument routing",
+      "components": [
+        "file:main.go",
+        "function:main.go:main",
+        "function:main.go:runSelector",
+        "function:main.go:runSettings",
+        "function:main.go:handleRegister",
+        "function:main.go:handleUnregister"
+      ]
+    },
+    {
+      "id": "layer:windows-integration",
+      "name": "Windows Integration",
+      "description": "Windows-specific functionality: registry operations, API calls, window management",
+      "components": [
+        "file:internal/registry/registry.go",
+        "file:internal/browser/launch.go",
+        "file:internal/browser/icon_windows.go",
+        "file:internal/dwm/backdrop.go",
+        "file:internal/dwm/backdrop_windows.go",
+        "file:internal/ipc/pipe.go"
+      ]
+    },
+    {
+      "id": "layer:business-logic",
+      "name": "Business Logic & Rules",
+      "description": "Core application logic: URL routing rules, browser selection, configuration management",
+      "components": [
+        "file:app.go",
+        "file:internal/rules/matcher.go",
+        "file:internal/config/service.go",
+        "file:internal/config/types.go",
+        "function:main.go:autoRule",
+        "function:app.go:OpenWithBrowser"
+      ]
+    },
+    {
+      "id": "layer:data-access",
+      "name": "Data Access & Configuration",
+      "description": "Configuration persistence, browser inventory, settings management",
+      "components": [
+        "file:internal/config/service.go",
+        "file:internal/config/types.go",
+        "function:internal/config/service.go:Load",
+        "function:internal/config/service.go:Get"
+      ]
+    },
+    {
+      "id": "layer:process-management",
+      "name": "Process Management",
+      "description": "Browser launching, process spawning, execution control",
+      "components": [
+        "file:internal/browser/launch.go",
+        "function:internal/browser/launch.go:OpenURL",
+        "function:internal/browser/launch.go:OpenURLWithAlternate",
+        "function:internal/browser/launch.go:DetectInstalled"
+      ]
+    },
+    {
+      "id": "layer:ui-framework",
+      "name": "UI Framework & Wails Bridge",
+      "description": "Wails framework integration, backend bindings to Vue frontend",
+      "components": [
+        "file:app.go",
+        "class:app.go:App",
+        "function:main.go:baseWailsOptions"
+      ]
+    },
+    {
+      "id": "layer:frontend",
+      "name": "Frontend (Vue 3)",
+      "description": "Vue 3 user interface components, browser selection UI, settings UI",
+      "components": [
+        "file:frontend/src/App.vue",
+        "file:frontend/src/views/SelectorView.vue",
+        "file:frontend/src/views/SettingsView.vue",
+        "file:frontend/src/components/BrowserList.vue",
+        "file:frontend/src/components/BrowserButton.vue",
+        "file:frontend/src/composables/useTheme.ts"
+      ]
+    },
+    {
+      "id": "layer:utilities",
+      "name": "Utilities & Cross-Cutting Concerns",
+      "description": "Logging, browser utilities, common helpers",
+      "components": [
+        "file:internal/logger/logger.go",
+        "file:frontend/src/utils/browser.ts"
+      ]
+    }
+  ]
+}

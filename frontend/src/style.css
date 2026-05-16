@@ -1,0 +1,451 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* =========================================================
+   Switchy — Design System
+   All tokens defined in theme-default.css; rules only here.
+   ========================================================= */
+
+/* ── Reset ─────────────────────────────────────────────────────────────────── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+@layer base {
+  html {
+    background: transparent;
+  }
+  body {
+    font-family: var(--font-ui);
+    font-size: 14px;
+    color: var(--ink-100);
+    background: transparent;
+    -webkit-font-smoothing: antialiased;
+    user-select: none;
+    overflow: hidden;
+  }
+  #app {
+    height: 100vh;
+    width: 100vw;
+    overflow: hidden;
+    /* Let Windows / DWM own outer window rounding; avoid double-radius clipping. */
+  }
+}
+
+/* ── Drag / no-drag regions ─────────────────────────────────────────────────── */
+.drag-region  { -webkit-app-region: drag; }
+.no-drag      { -webkit-app-region: no-drag; }
+
+/* ── Icon button ────────────────────────────────────────────────────────────── */
+.icon-btn {
+  width: 28px;
+  height: 28px;
+  border: 0;
+  background: transparent;
+  border-radius: 6px;
+  color: var(--ink-60);
+  display: grid;
+  place-items: center;
+  cursor: pointer;
+  transition: background 120ms, color 120ms;
+}
+.icon-btn:hover { background: var(--ink-10); color: var(--ink-100); }
+.icon-btn:active { background: var(--ink-20); }
+.icon-btn.danger:hover { background: rgb(from var(--color-danger) r g b / 0.18); color: var(--color-danger); }
+.icon-btn svg { width: 14px; height: 14px; pointer-events: none; }
+
+/* ── WinUI3-compat aliases ─────────────────────────────────────────────────── */
+.win-icon-btn  { @apply icon-btn; width: 32px; height: 32px; }
+.win-close-btn {
+  width: 46px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--ink-60);
+  background: transparent;
+  border: 0;
+  cursor: pointer;
+  transition: background 100ms, color 100ms;
+}
+.win-close-btn:hover  { background: var(--color-danger); color: var(--color-sand); }
+.win-close-btn:active { background: rgb(from var(--color-danger) r g b / 0.80); }
+
+/* ── Buttons ────────────────────────────────────────────────────────────────── */
+.btn {
+  height: 32px;
+  padding: 0 14px;
+  border-radius: var(--r-control);
+  font-family: var(--font-ui);
+  font-size: 12.5px;
+  font-weight: 500;
+  letter-spacing: -0.005em;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  border: 1px solid var(--hairline-hi);
+  background: var(--ink-10);
+  color: var(--ink-100);
+  transition: background 120ms, border-color 120ms, transform 80ms;
+}
+.btn:hover  { background: var(--ink-20); border-color: var(--ink-40); }
+.btn:active { transform: translateY(1px); }
+.btn svg    { width: 13px; height: 13px; pointer-events: none; }
+
+.btn.primary {
+  background: var(--accent);
+  border-color: var(--accent-dim);
+  color: var(--accent-text);
+  font-weight: 600;
+}
+.btn.primary:hover { background: var(--accent-dim); border-color: var(--accent); color: var(--color-sand); }
+
+.btn-primary {
+  padding: 5px 14px;
+  border-radius: var(--r-control);
+  background: var(--accent);
+  color: var(--accent-text);
+  font-weight: 600;
+  font-family: var(--font-ui);
+  font-size: 12.5px;
+  border: 1px solid var(--accent-dim);
+  transition: opacity 100ms, background 100ms;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+.btn-primary:hover    { background: var(--accent-dim); color: var(--color-sand); }
+.btn-primary:active   { opacity: 0.8; }
+.btn-primary:disabled { opacity: 0.4; cursor: not-allowed; }
+
+.btn-ghost {
+  padding: 5px 14px;
+  border-radius: var(--r-control);
+  background: var(--ink-10);
+  color: var(--ink-100);
+  font-family: var(--font-ui);
+  font-size: 12.5px;
+  font-weight: 500;
+  border: 1px solid var(--hairline-hi);
+  transition: background 100ms;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+.btn-ghost:hover  { background: var(--ink-20); }
+.btn-ghost:active { background: var(--ink-10); }
+
+/* ── Tag / badge ────────────────────────────────────────────────────────────── */
+.tag {
+  font-family: var(--font-mono);
+  font-size: 9.5px;
+  font-weight: 500;
+  letter-spacing: 0.04em;
+  padding: 2px 6px;
+  border-radius: var(--r-tag);
+  background: var(--ink-10);
+  color: var(--ink-60);
+  border: 1px solid var(--hairline);
+  white-space: nowrap;
+}
+.tag.default {
+  background: var(--accent-tint);
+  color: var(--accent);
+  border-color: rgb(from var(--accent) r g b / 0.35);
+}
+
+/* ── Keycap ─────────────────────────────────────────────────────────────────── */
+.keycap {
+  min-width: 24px;
+  height: 24px;
+  padding: 0 7px;
+  border-radius: var(--r-key);
+  background: var(--ink-10);
+  border: 1px solid var(--hairline);
+  border-bottom-width: 2px;
+  color: var(--ink-80);
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 500;
+  display: grid;
+  place-items: center;
+  line-height: 1;
+}
+
+/* ── Browser row (selector list item) ──────────────────────────────────────── */
+.browser-row {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: center;
+  gap: 10px;
+  padding: 10px;
+  border-radius: var(--r-row);
+  cursor: pointer;
+  border: 1px solid transparent;
+  transition: background 100ms, border-color 100ms;
+}
+
+.browser-row .keycap {
+  justify-self: end;
+}
+.browser-row:hover {
+  background: var(--ink-10);
+  border-color: var(--hairline-hi);
+}
+.browser-row.is-focused {
+  background: var(--accent-tint);
+  border-color: rgb(from var(--accent) r g b / 0.45);
+}
+.browser-row.is-focused .keycap {
+  background: var(--accent);
+  border-color: var(--accent-dim);
+  color: var(--accent-text);
+}
+.browser-icon {
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  display: grid;
+  place-items: center;
+  background: transparent;
+  flex-shrink: 0;
+  overflow: visible;
+  position: relative;
+}
+
+/* High-DPI PNG from backend scaled to list row — avoid muddy downscale blur */
+.browser-icon img,
+.row-icon img {
+  width: 256px;
+  height: 256px;
+  display: block;
+  object-fit: contain;
+}
+
+/* High-DPI PNG from backend scaled to list row — avoid muddy downscale blur */
+.browser-icon img,
+.row-icon img {
+  width: 32px;
+  height: 32px;
+  display: block;
+  object-fit: contain;
+}
+
+.profile-avatar {
+  position: absolute;
+  bottom: -6px;
+  right: -6px;
+  max-width: 20px;
+  width: 8px;
+  max-height: 20px;
+  height: 8px;
+  border-radius: 50%;
+  border: 2px solid var(--accent-dim);
+  background: var(--ink-20);
+  object-fit: cover;
+  display: block;
+}
+
+.browser-meta {
+  min-width: 0;
+  text-align: left;
+  justify-self: stretch;
+}
+.browser-name {
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--ink-100);
+  letter-spacing: -0.005em;
+  line-height: 1.3;
+}
+.browser-sub {
+  margin-top: 2px;
+  font-size: 11px;
+  font-weight: 500;
+  color: var(--ink-40);
+  font-family: var(--font-mono);
+  letter-spacing: 0;
+}
+
+/* ── Toggle switch ──────────────────────────────────────────────────────────── */
+.switch {
+  position: relative;
+  width: 36px;
+  height: 20px;
+  border-radius: 10px;
+  background: var(--ink-20);
+  cursor: pointer;
+  transition: background 140ms;
+  flex-shrink: 0;
+  border: 0;
+}
+.switch::after {
+  content: "";
+  position: absolute;
+  left: 2px;
+  top: 2px;
+  width: 16px;
+  height: 16px;
+  background: var(--ink-100);
+  border-radius: 50%;
+  transition: transform 160ms cubic-bezier(0.4, 0.2, 0.2, 1);
+}
+.switch.on  { background: var(--accent); }
+.switch.on::after { transform: translateX(16px); }
+
+/* ── Form input ─────────────────────────────────────────────────────────────── */
+.s-input {
+  width: 100%;
+  height: 32px;
+  padding: 0 12px;
+  border-radius: var(--r-control);
+  background: var(--fill-input);
+  border: 1px solid var(--hairline);
+  color: var(--ink-100);
+  font-family: var(--font-mono);
+  font-size: 12px;
+  letter-spacing: -0.005em;
+  transition: border-color 120ms, background 120ms;
+  outline: none;
+}
+.s-input:focus {
+  border-color: var(--accent);
+  background: rgb(from var(--accent) r g b / 0.07);
+}
+.s-input::placeholder { color: var(--ink-40); }
+
+/* Native <select> option popup — must use solid colors as OS ignores transparency */
+select.s-input option {
+  background: #1C1410;
+  color: #F9F8F6;
+}
+
+/* ── Executable field with browse split (BrowserEditor shared) ─────────────── */
+.input-with-btn {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  height: 32px;
+  border-radius: var(--r-control);
+  border: 1px solid var(--hairline);
+  background: var(--fill-input);
+  overflow: hidden;
+  transition: border-color 120ms;
+}
+.input-with-btn:focus-within { border-color: var(--accent); }
+.input-with-btn input {
+  border: 0;
+  background: transparent;
+  padding: 0 12px;
+  color: var(--ink-100);
+  font-family: var(--font-mono);
+  font-size: 12px;
+  outline: none;
+  min-width: 0;
+}
+.input-with-btn input::placeholder { color: var(--ink-40); }
+.input-with-btn button {
+  border: 0;
+  border-left: 1px solid var(--hairline);
+  background: transparent;
+  color: var(--ink-60);
+  padding: 0 12px;
+  cursor: pointer;
+  font-family: var(--font-ui);
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.02em;
+  transition: background 120ms, color 120ms;
+  white-space: nowrap;
+}
+.input-with-btn button:hover { background: var(--ink-10); color: var(--ink-100); }
+
+/* ── Form field rows (BrowserEditor behaviour blocks) ─────────────────────── */
+.field-row-b {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 0;
+  gap: 16px;
+}
+.field-text-b { font-size: 12.5px; color: var(--ink-100); flex: 1; }
+.field-text-b small {
+  display: block;
+  margin-top: 2px;
+  font-size: 11px;
+  color: var(--ink-60);
+  font-weight: 400;
+}
+
+/* ── Inline link buttons (editors) ────────────────────────────────────────── */
+.link-btn {
+  background: none;
+  border: 0;
+  padding: 0;
+  font-size: 11px;
+  color: var(--accent);
+  cursor: pointer;
+  font-family: var(--font-ui);
+  transition: opacity 120ms;
+}
+.link-btn:hover { opacity: 0.75; }
+
+/* ── Nav item ───────────────────────────────────────────────────────────────── */
+.nav-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 10px;
+  border-radius: var(--r-control);
+  color: var(--ink-80);
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  border: 1px solid transparent;
+  transition: background 100ms, color 100ms, border-color 100ms;
+  position: relative;
+  user-select: none;
+}
+.nav-item:hover { background: var(--ink-10); color: var(--ink-100); }
+.nav-item.is-active {
+  background: var(--accent-tint);
+  color: var(--ink-100);
+  border-color: rgb(from var(--accent) r g b / 0.28);
+}
+.nav-item.is-active::before {
+  content: "";
+  position: absolute;
+  left: -12px;
+  top: 8px;
+  bottom: 8px;
+  width: 2px;
+  background: var(--accent);
+  border-radius: 0 2px 2px 0;
+}
+.nav-item svg { width: 15px; height: 15px; opacity: 0.85; flex-shrink: 0; }
+.nav-count {
+  margin-left: auto;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--ink-40);
+  background: var(--ink-10);
+  padding: 1px 6px;
+  border-radius: 4px;
+}
+.nav-item.is-active .nav-count {
+  background: rgb(from var(--accent) r g b / 0.20);
+  color: var(--ink-80);
+}
+
+/* ── win-list-item (compat) ─────────────────────────────────────────────────── */
+.win-list-item {
+  @apply browser-row;
+}
+
+/* ── Scrollbar ──────────────────────────────────────────────────────────────── */
+::-webkit-scrollbar         { width: 8px; }
+::-webkit-scrollbar-track   { background: transparent; }
+::-webkit-scrollbar-thumb   { background: var(--ink-20); border-radius: 4px; }
+::-webkit-scrollbar-thumb:hover { background: var(--ink-40); }
+

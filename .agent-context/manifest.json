@@ -1,0 +1,83 @@
+{
+  "version": "0.0.8",
+  "graphHash": "e30e2f0",
+  "generatedAt": "2026-05-16T16:30:00Z",
+  "filesWritten": [
+    {
+      "path": "AGENTS.md",
+      "lineCount": 98,
+      "status": "created"
+    },
+    {
+      "path": "CLAUDE.md",
+      "lineCount": 1,
+      "status": "created"
+    },
+    {
+      "path": "CLAUDE.local.md",
+      "lineCount": 3,
+      "status": "created"
+    },
+    {
+      "path": ".claude/settings.json",
+      "lineCount": 8,
+      "status": "created"
+    },
+    {
+      "path": "docs/agents/architecture.md",
+      "lineCount": 129,
+      "status": "created"
+    },
+    {
+      "path": "docs/agents/flow.md",
+      "lineCount": 156,
+      "status": "created"
+    },
+    {
+      "path": "docs/agents/patterns.md",
+      "lineCount": 103,
+      "status": "created"
+    },
+    {
+      "path": "docs/agents/conventions.md",
+      "lineCount": 48,
+      "status": "created"
+    },
+    {
+      "path": "docs/agents/testing.md",
+      "lineCount": 24,
+      "status": "created"
+    },
+    {
+      "path": "docs/agents/tech-debt.md",
+      "lineCount": 14,
+      "status": "created"
+    },
+    {
+      "path": ".claude/rules/business-logic-rules.md",
+      "lineCount": 22,
+      "status": "created"
+    },
+    {
+      "path": ".claude/rules/windows-integration.md",
+      "lineCount": 23,
+      "status": "created"
+    },
+    {
+      "path": ".claude/rules/frontend.md",
+      "lineCount": 22,
+      "status": "created"
+    },
+    {
+      "path": ".claude/rules/entry-point.md",
+      "lineCount": 19,
+      "status": "created"
+    }
+  ],
+  "lint": {
+    "agents_md_lines": 98,
+    "agents_md_within_cap": true,
+    "checks_passed": 10,
+    "checks_total": 10
+  }
+}

@@ -1,0 +1,22 @@
+/* ── Mica appearance ─────────────────────────────────────────────────────────
+   Subtle desktop-integrated material. Light blur, low-opacity surfaces, lets
+   the Windows Mica compositor sample the desktop wallpaper through the glass.
+   All surface/tint values derive from theme color tokens via relative color
+   syntax — swapping the theme file automatically repaints every surface.
+   ─────────────────────────────────────────────────────────────────────────── */
+:root {
+  --backdrop-blur:   blur(24px) saturate(118%);
+  --backdrop-blur-h: blur(28px) saturate(122%);
+
+  --substrate:     rgb(from var(--color-surface) r g b / 0.38);
+  --substrate-top: rgb(from var(--color-surface-hi) r g b / 0.44);
+  --sidebar:       rgb(from var(--color-surface) r g b / 0.30);
+
+  --hairline:      rgb(from var(--color-sand) r g b / 0.05);
+  --hairline-hi:   rgb(from var(--color-sand) r g b / 0.09);
+
+  --ink-10:        rgb(from var(--color-sand) r g b / 0.05);
+  --ink-20:        rgb(from var(--color-sand) r g b / 0.09);
+
+  --accent-tint:   rgb(from var(--accent) r g b / 0.09);
+}

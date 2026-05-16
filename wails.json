@@ -1,0 +1,19 @@
+{
+  "$schema": "https://wails.io/schemas/config.v2.json",
+  "name": "Switchy",
+  "outputfilename": "switchy",
+  "frontend:install": "npm install",
+  "frontend:build": "npm run build",
+  "frontend:dev:watcher": "npm run dev",
+  "frontend:dev:serverUrl": "auto",
+  "info": {
+    "productName": "Switchy",
+    "productVersion": "1.0.1",
+    "description": "Choose which browser opens your links",
+    "copyright": "MIT"
+  },
+  "author": {
+    "name": "jonaskahn",
+    "email": "tuyendev@gmail.com"
+  }
+}

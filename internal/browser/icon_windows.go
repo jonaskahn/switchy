@@ -3,13 +3,13 @@
 package browser
 
 import (
+	"bytes"
 	"debug/pe"
 	"encoding/base64"
-	"image/png"
+	"encoding/binary"
 	"image"
 	"image/color"
-	"encoding/binary"
-	"bytes"
+	"image/png"
 	"os"
 	"strconv"
 	"strings"
@@ -266,8 +266,8 @@ func (r *peReader) readDir(off uint32) []resEntry {
 	for i := 0; i < total; i++ {
 		e := off + 16 + uint32(i)*8
 		entries[i] = resEntry{
-			nameOrID: binary.LittleEndian.Uint32(r.raw[e:e+4]),
-			offset:   binary.LittleEndian.Uint32(r.raw[e+4:e+8]),
+			nameOrID: binary.LittleEndian.Uint32(r.raw[e : e+4]),
+			offset:   binary.LittleEndian.Uint32(r.raw[e+4 : e+8]),
 		}
 	}
 	return entries
@@ -318,15 +318,27 @@ func ObtainIcon(path string, idx, size int) (uintptr, bool) {
 		1,
 	)
 	if ret == 0 {
-		if largeIcon != 0 { procDestroyIcon.Call(largeIcon) }
-		if smallIcon != 0 { procDestroyIcon.Call(smallIcon) }
+		if largeIcon != 0 {
+			procDestroyIcon.Call(largeIcon)
+		}
+		if smallIcon != 0 {
+			procDestroyIcon.Call(smallIcon)
+		}
 		return 0, false
 	}
 	icon := largeIcon
-	if icon == 0 { icon = smallIcon }
-	if icon == 0 { return 0, false }
-	if largeIcon != 0 && largeIcon != icon { procDestroyIcon.Call(largeIcon) }
-	if smallIcon != 0 && smallIcon != icon { procDestroyIcon.Call(smallIcon) }
+	if icon == 0 {
+		icon = smallIcon
+	}
+	if icon == 0 {
+		return 0, false
+	}
+	if largeIcon != 0 && largeIcon != icon {
+		procDestroyIcon.Call(largeIcon)
+	}
+	if smallIcon != 0 && smallIcon != icon {
+		procDestroyIcon.Call(smallIcon)
+	}
 	return icon, true
 }
 
@@ -344,49 +356,87 @@ func privateExtractBest(pathPtr *uint16, idx, size int) uintptr {
 		uintptr(unsafe.Pointer(&iconID)),
 		1, 0,
 	)
-	if ret == 0 || uint32(ret) == 0xffffffff || hIcon == 0 { return 0 }
+	if ret == 0 || uint32(ret) == 0xffffffff || hIcon == 0 {
+		return 0
+	}
 	return hIcon
 }
 
 func RasterizeIconToPNG(icon uintptr, size int) string {
 	type bi struct {
-		sz uint32; w, h int32; p uint16; bc uint16; c uint32
-		si uint32; xp, yp int32; cu, ci uint32
+		sz     uint32
+		w, h   int32
+		p      uint16
+		bc     uint16
+		c      uint32
+		si     uint32
+		xp, yp int32
+		cu, ci uint32
 	}
 	b := bi{sz: uint32(unsafe.Sizeof(bi{})), w: int32(size), h: -int32(size), p: 1, bc: 32, c: 0}
 	dc, _, _ := procGetDC.Call(0)
-	if dc == 0 { return "" }
+	if dc == 0 {
+		return ""
+	}
 	defer procReleaseDC.Call(0, dc)
 	mdc, _, _ := procCreateCompatibleDC.Call(dc)
-	if mdc == 0 { return "" }
+	if mdc == 0 {
+		return ""
+	}
 	defer procDeleteDC.Call(mdc)
 	var pp unsafe.Pointer
 	bm, _, _ := procCreateDIBSection.Call(mdc, uintptr(unsafe.Pointer(&b)), 0, uintptr(unsafe.Pointer(&pp)), 0, 0)
-	if bm == 0 || pp == nil { return "" }
+	if bm == 0 || pp == nil {
+		return ""
+	}
 	defer procDeleteObject.Call(bm)
 	procSelectObject.Call(mdc, bm)
 	ps := unsafe.Slice((*uint32)(pp), size*size)
-	for i := range ps { ps[i] = 0 }
+	for i := range ps {
+		ps[i] = 0
+	}
 	procDrawIconEx.Call(mdc, 0, 0, icon, uintptr(size), uintptr(size), 0, 0, 3)
 	ha := false
-	for _, p := range ps { if uint8(p>>24) != 0 { ha = true; break } }
+	for _, p := range ps {
+		if uint8(p>>24) != 0 {
+			ha = true
+			break
+		}
+	}
 	img := image.NewRGBA(image.Rect(0, 0, size, size))
-	for i, p := range ps { img.SetRGBA(i%size, i/size, color.RGBA{R: uint8(p>>16), G: uint8(p>>8), B: uint8(p), A: func() uint8 { if ha { return uint8(p>>24) }; return 255 }() }) }
+	for i, p := range ps {
+		img.SetRGBA(i%size, i/size, color.RGBA{R: uint8(p >> 16), G: uint8(p >> 8), B: uint8(p), A: func() uint8 {
+			if ha {
+				return uint8(p >> 24)
+			}
+			return 255
+		}()})
+	}
 	var buf bytes.Buffer
-	if err := png.Encode(&buf, img); err != nil { return "" }
+	if err := png.Encode(&buf, img); err != nil {
+		return ""
+	}
 	return "data:image/png;base64," + base64.StdEncoding.EncodeToString(buf.Bytes())
 }
 
 func ExtractIconAsBase64PNG(iconSpec string) string {
 	path, idx := parseIconSpec(iconSpec)
-	if path == "" { return "" }
+	if path == "" {
+		return ""
+	}
 	// 1. Standalone .ico
-	if r := extractICOFile(path); r != "" { return r }
+	if r := extractICOFile(path); r != "" {
+		return r
+	}
 	// 2. PE resources
-	if r := extractResourceIcons(path); r != "" { return r }
+	if r := extractResourceIcons(path); r != "" {
+		return r
+	}
 	// 3. GDI fallback
 	hIcon, ok := ObtainIcon(path, idx, 256)
-	if !ok || hIcon == 0 { return "" }
+	if !ok || hIcon == 0 {
+		return ""
+	}
 	defer procDestroyIcon.Call(hIcon)
 	return RasterizeIconToPNG(hIcon, 256)
 }

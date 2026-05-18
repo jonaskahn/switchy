@@ -2,6 +2,8 @@ package main
 
 import (
 	"context"
+	"fmt"
+	"net/url"
 	"os"
 	"os/exec"
 	"sync"
@@ -236,6 +238,59 @@ func (a *App) ApplyAutoRules() (string, error) {
 		return "", err
 	}
 	return rules.Match(a.currentURL(), s.Rulesets), nil
+}
+
+func (a *App) RememberBrowserForDomain(browserName string) (string, error) {
+	parsed, err := url.Parse(a.currentURL())
+	if err != nil || parsed.Hostname() == "" {
+		return "", fmt.Errorf("no hostname in URL %q", a.currentURL())
+	}
+	hostname := parsed.Hostname()
+
+	s, err := config.Load()
+	if err != nil {
+		return "", err
+	}
+
+	const quickRules = "Quick Rules"
+	idx := -1
+	for i, rs := range s.Rulesets {
+		if rs.Name == quickRules {
+			idx = i
+			break
+		}
+	}
+	if idx == -1 {
+		s.Rulesets = append(s.Rulesets, config.Ruleset{
+			Name:    quickRules,
+			Enabled: true,
+			Rules:   []config.Rule{},
+		})
+		idx = len(s.Rulesets) - 1
+	}
+
+	pattern := "d$" + hostname
+	updated := false
+	for i, r := range s.Rulesets[idx].Rules {
+		if r.Pattern == pattern {
+			s.Rulesets[idx].Rules[i].Browser = browserName
+			updated = true
+			break
+		}
+	}
+	if !updated {
+		s.Rulesets[idx].Rules = append(s.Rulesets[idx].Rules, config.Rule{
+			Pattern: pattern,
+			Browser: browserName,
+		})
+	}
+
+	s.AppSettings.UseRules = true
+
+	if err := config.Save(s); err != nil {
+		return "", err
+	}
+	return hostname, nil
 }
 
 func (a *App) SaveSettings(s *config.UserSettings) error {

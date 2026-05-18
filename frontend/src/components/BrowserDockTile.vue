@@ -10,7 +10,7 @@ const props = defineProps<{
   animationDelayMs: number
 }>()
 
-defineEmits<{ (e: 'open'): void }>()
+defineEmits<{ (e: 'open', remember: boolean): void }>()
 
 const browserRef = toRef(props, 'browser')
 const { iconDataUrl, loadIcon } = useBrowserIcon(browserRef, { pixelSize: 256 })
@@ -34,7 +34,7 @@ onMounted(() => {
     role="option"
     :aria-selected="focused ? 'true' : 'false'"
     :style="animationStyle"
-    @click="$emit('open')"
+    @click="(e: MouseEvent) => $emit('open', e.ctrlKey)"
   >
     <span v-if="shortcut" class="keycap">{{ shortcut }}</span>
     <div class="tile-icon">

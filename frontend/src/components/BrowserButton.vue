@@ -8,7 +8,7 @@ const props = defineProps<{
   shortcut?: string
 }>()
 
-defineEmits<{ open: [] }>()
+defineEmits<{ (e: 'open', remember: boolean): void }>()
 
 const browserRef = toRef(props, 'browser')
 const { iconDataUrl, loadIcon } = useBrowserIcon(browserRef)
@@ -26,7 +26,7 @@ onMounted(() => void loadIcon())
 </script>
 
 <template>
-  <button class="browser-row" role="option" @click="$emit('open')">
+  <button class="browser-row" role="option" @click="(e: MouseEvent) => $emit('open', e.ctrlKey)">
     <div class="browser-icon">
       <img v-if="iconDataUrl" :src="iconDataUrl" decoding="async" :alt="browser.Name" width="12" />
       <svg

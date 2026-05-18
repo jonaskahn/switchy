@@ -3,6 +3,7 @@ import { ref, computed, onMounted } from 'vue'
 import {
   ApplyAppearance,
   GetSettings,
+  GetVersion,
   SaveSettings,
   DetectBrowsers,
   RegisterAsDefault,
@@ -27,6 +28,7 @@ const DEFAULT_RULESET_NAME = 'New Ruleset'
 
 const activeSection = ref<Section>('browsers')
 const settings = ref<UserSettings | null>(null)
+const version = ref('')
 const saving = ref(false)
 const message = ref('')
 const registering = ref(false)
@@ -70,7 +72,7 @@ function markUnsaved() {
 }
 
 async function load() {
-  settings.value = await GetSettings()
+  ;[settings.value, version.value] = await Promise.all([GetSettings(), GetVersion()])
   settings.value.Browsers ??= []
   settings.value.Rulesets ??= []
   unsavedCount.value = 0
@@ -327,7 +329,9 @@ onMounted(load)
         <div class="sidebar-spacer"></div>
 
         <div class="sidebar-meta">
-          <div class="meta-row"><span>VERSION</span><span>1.0.0</span></div>
+          <div class="meta-row">
+            <span>VERSION</span><span>{{ version }}</span>
+          </div>
           <div class="meta-row">
             <span>DEFAULT</span>
             <span style="color: var(--accent)">● ACTIVE</span>
@@ -492,12 +496,12 @@ onMounted(load)
 
             <div class="settings-card">
               <div class="card-title">Theme</div>
-              <div class="field-row-setting field-row-setting--top">
-                <div class="field-text">
+              <div class="theme-section">
+                <div class="field-text theme-section__label">
                   Color palette
                   <small>Accent colors and ink scale applied across all windows.</small>
                 </div>
-                <div class="lf-picker">
+                <div class="lf-picker lf-picker--grid">
                   <button
                     type="button"
                     class="lf-card"
@@ -521,6 +525,248 @@ onMounted(load)
                     </div>
                     <span class="lf-label">Default</span>
                     <span class="lf-desc">Sand · warm tan</span>
+                  </button>
+
+                  <button
+                    type="button"
+                    class="lf-card"
+                    :class="{ 'is-active': settings.AppSettings.Theme === 'midnight' }"
+                    @click="setTheme('midnight')"
+                  >
+                    <div class="lf-palette">
+                      <span class="lf-dot" style="background: #ff4d6d" />
+                      <span class="lf-dot" style="background: #4a9eff" />
+                      <span class="lf-dot" style="background: #2a5f9e" />
+                      <span
+                        class="lf-dot"
+                        style="
+                          background: #e8eef8;
+                          box-shadow: inset 0 0 0 1px rgba(232, 238, 248, 0.25);
+                        "
+                      />
+                    </div>
+                    <span class="lf-label">Midnight</span>
+                    <span class="lf-desc">Navy · electric blue</span>
+                  </button>
+
+                  <button
+                    type="button"
+                    class="lf-card"
+                    :class="{ 'is-active': settings.AppSettings.Theme === 'forest' }"
+                    @click="setTheme('forest')"
+                  >
+                    <div class="lf-palette">
+                      <span class="lf-dot" style="background: #ff5252" />
+                      <span class="lf-dot" style="background: #4caf7a" />
+                      <span class="lf-dot" style="background: #2e7d52" />
+                      <span
+                        class="lf-dot"
+                        style="
+                          background: #e8f5e9;
+                          box-shadow: inset 0 0 0 1px rgba(232, 245, 233, 0.25);
+                        "
+                      />
+                    </div>
+                    <span class="lf-label">Forest</span>
+                    <span class="lf-desc">Pine · sage green</span>
+                  </button>
+
+                  <button
+                    type="button"
+                    class="lf-card"
+                    :class="{ 'is-active': settings.AppSettings.Theme === 'crimson' }"
+                    @click="setTheme('crimson')"
+                  >
+                    <div class="lf-palette">
+                      <span class="lf-dot" style="background: #ff6b6b" />
+                      <span class="lf-dot" style="background: #e53935" />
+                      <span class="lf-dot" style="background: #8b1a1a" />
+                      <span
+                        class="lf-dot"
+                        style="
+                          background: #f8ecec;
+                          box-shadow: inset 0 0 0 1px rgba(248, 236, 236, 0.25);
+                        "
+                      />
+                    </div>
+                    <span class="lf-label">Crimson</span>
+                    <span class="lf-desc">Obsidian · blood red</span>
+                  </button>
+
+                  <button
+                    type="button"
+                    class="lf-card"
+                    :class="{ 'is-active': settings.AppSettings.Theme === 'aurora' }"
+                    @click="setTheme('aurora')"
+                  >
+                    <div class="lf-palette">
+                      <span class="lf-dot" style="background: #ff6b9d" />
+                      <span class="lf-dot" style="background: #9b8ae0" />
+                      <span class="lf-dot" style="background: #6247aa" />
+                      <span
+                        class="lf-dot"
+                        style="
+                          background: #ede8f8;
+                          box-shadow: inset 0 0 0 1px rgba(237, 232, 248, 0.25);
+                        "
+                      />
+                    </div>
+                    <span class="lf-label">Aurora</span>
+                    <span class="lf-desc">Void · soft violet</span>
+                  </button>
+
+                  <button
+                    type="button"
+                    class="lf-card"
+                    :class="{ 'is-active': settings.AppSettings.Theme === 'glacier' }"
+                    @click="setTheme('glacier')"
+                  >
+                    <div class="lf-palette">
+                      <span class="lf-dot" style="background: #ff6b6b" />
+                      <span class="lf-dot" style="background: #7ec8e3" />
+                      <span class="lf-dot" style="background: #4a8fa8" />
+                      <span
+                        class="lf-dot"
+                        style="
+                          background: #e3ebf5;
+                          box-shadow: inset 0 0 0 1px rgba(227, 235, 245, 0.25);
+                        "
+                      />
+                    </div>
+                    <span class="lf-label">Glacier</span>
+                    <span class="lf-desc">Arctic · ice blue</span>
+                  </button>
+
+                  <button
+                    type="button"
+                    class="lf-card"
+                    :class="{ 'is-active': settings.AppSettings.Theme === 'ember' }"
+                    @click="setTheme('ember')"
+                  >
+                    <div class="lf-palette">
+                      <span class="lf-dot" style="background: #ff5252" />
+                      <span class="lf-dot" style="background: #ff8c42" />
+                      <span class="lf-dot" style="background: #cc5500" />
+                      <span
+                        class="lf-dot"
+                        style="
+                          background: #fff3e0;
+                          box-shadow: inset 0 0 0 1px rgba(255, 243, 224, 0.25);
+                        "
+                      />
+                    </div>
+                    <span class="lf-label">Ember</span>
+                    <span class="lf-desc">Charred · amber</span>
+                  </button>
+
+                  <button
+                    type="button"
+                    class="lf-card"
+                    :class="{ 'is-active': settings.AppSettings.Theme === 'sakura' }"
+                    @click="setTheme('sakura')"
+                  >
+                    <div class="lf-palette">
+                      <span class="lf-dot" style="background: #ff6b6b" />
+                      <span class="lf-dot" style="background: #f48fb1" />
+                      <span class="lf-dot" style="background: #c2185b" />
+                      <span
+                        class="lf-dot"
+                        style="
+                          background: #fff0f5;
+                          box-shadow: inset 0 0 0 1px rgba(255, 240, 245, 0.25);
+                        "
+                      />
+                    </div>
+                    <span class="lf-label">Sakura</span>
+                    <span class="lf-desc">Ink · cherry blossom</span>
+                  </button>
+
+                  <button
+                    type="button"
+                    class="lf-card"
+                    :class="{ 'is-active': settings.AppSettings.Theme === 'monochrome' }"
+                    @click="setTheme('monochrome')"
+                  >
+                    <div class="lf-palette">
+                      <span class="lf-dot" style="background: #ff4444" />
+                      <span class="lf-dot" style="background: #a0a0a0" />
+                      <span class="lf-dot" style="background: #606060" />
+                      <span
+                        class="lf-dot"
+                        style="
+                          background: #f0f0f0;
+                          box-shadow: inset 0 0 0 1px rgba(240, 240, 240, 0.25);
+                        "
+                      />
+                    </div>
+                    <span class="lf-label">Monochrome</span>
+                    <span class="lf-desc">Pitch black · silver</span>
+                  </button>
+
+                  <button
+                    type="button"
+                    class="lf-card"
+                    :class="{ 'is-active': settings.AppSettings.Theme === 'copper' }"
+                    @click="setTheme('copper')"
+                  >
+                    <div class="lf-palette">
+                      <span class="lf-dot" style="background: #ff4444" />
+                      <span class="lf-dot" style="background: #b87333" />
+                      <span class="lf-dot" style="background: #7a4a1e" />
+                      <span
+                        class="lf-dot"
+                        style="
+                          background: #faf0e6;
+                          box-shadow: inset 0 0 0 1px rgba(250, 240, 230, 0.25);
+                        "
+                      />
+                    </div>
+                    <span class="lf-label">Copper</span>
+                    <span class="lf-desc">Mahogany · bronze</span>
+                  </button>
+
+                  <button
+                    type="button"
+                    class="lf-card"
+                    :class="{ 'is-active': settings.AppSettings.Theme === 'void' }"
+                    @click="setTheme('void')"
+                  >
+                    <div class="lf-palette">
+                      <span class="lf-dot" style="background: #ff4d9e" />
+                      <span class="lf-dot" style="background: #a855f7" />
+                      <span class="lf-dot" style="background: #7c3aed" />
+                      <span
+                        class="lf-dot"
+                        style="
+                          background: #f0eeff;
+                          box-shadow: inset 0 0 0 1px rgba(240, 238, 255, 0.25);
+                        "
+                      />
+                    </div>
+                    <span class="lf-label">Void</span>
+                    <span class="lf-desc">True black · neon violet</span>
+                  </button>
+
+                  <button
+                    type="button"
+                    class="lf-card"
+                    :class="{ 'is-active': settings.AppSettings.Theme === 'ocean' }"
+                    @click="setTheme('ocean')"
+                  >
+                    <div class="lf-palette">
+                      <span class="lf-dot" style="background: #ff6b6b" />
+                      <span class="lf-dot" style="background: #2e9e9e" />
+                      <span class="lf-dot" style="background: #1a6666" />
+                      <span
+                        class="lf-dot"
+                        style="
+                          background: #e0f4f4;
+                          box-shadow: inset 0 0 0 1px rgba(224, 244, 244, 0.25);
+                        "
+                      />
+                    </div>
+                    <span class="lf-label">Ocean</span>
+                    <span class="lf-desc">Deep sea · teal</span>
                   </button>
                 </div>
               </div>
@@ -1037,6 +1283,23 @@ onMounted(load)
   gap: 10px;
   flex-shrink: 0;
   flex-wrap: wrap;
+}
+
+.lf-picker--grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(108px, 1fr));
+  gap: 10px;
+  width: 100%;
+}
+
+.theme-section {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.theme-section__label {
+  flex: unset;
 }
 
 .lf-card {

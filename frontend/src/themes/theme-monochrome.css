@@ -1,0 +1,75 @@
+/* ── Monochrome color theme ───────────────────────────────────────────────────
+   Palette: pitch black · graphite · silver · white
+   ─────────────────────────────────────────────────────────────────────────── */
+:root {
+  /* ── Raw palette ───────────────────────────────────────────────────────── */
+  --color-danger:     #FF4444;
+  --color-sand:       #F0F0F0;
+  --color-linen:      #D8D8D8;
+  --color-clay:       #A8A8A8;
+  --color-tan:        #808080;
+
+  --color-surface:    #0A0A0A;
+  --color-surface-hi: #141414;
+
+  /* ── Semantic accent ───────────────────────────────────────────────────── */
+  --accent:       #A0A0A0;
+  --accent-dim:   #606060;
+  --accent-text:  #0A0A0A;
+  --accent-tint:  rgb(from var(--accent) r g b / 0.12);
+
+  /* ── Ink scale ─────────────────────────────────────────────────────────── */
+  --ink-100: rgba(240, 240, 240, 0.96);
+  --ink-80:  rgba(240, 240, 240, 0.78);
+  --ink-60:  rgba(240, 240, 240, 0.55);
+  --ink-40:  rgba(240, 240, 240, 0.32);
+  --ink-20:  rgba(240, 240, 240, 0.14);
+  --ink-10:  rgba(240, 240, 240, 0.06);
+
+  /* ── Surfaces ──────────────────────────────────────────────────────────── */
+  --substrate:     rgb(from var(--color-surface) r g b / 0.84);
+  --substrate-top: rgb(from var(--color-surface-hi) r g b / 0.86);
+  --sidebar:       rgb(from var(--color-surface) r g b / 0.72);
+  --hairline:      rgb(from var(--color-sand) r g b / 0.07);
+  --hairline-hi:   rgb(from var(--color-sand) r g b / 0.14);
+
+  /* ── Backdrop blur ─────────────────────────────────────────────────────── */
+  --backdrop-blur:   blur(40px) saturate(150%);
+  --backdrop-blur-h: blur(48px) saturate(160%);
+
+  /* ── Fill primitives ───────────────────────────────────────────────────── */
+  --fill-input:           rgba(0, 0, 0, 0.25);
+  --fill-control:         var(--ink-10);
+  --fill-control-hover:   var(--ink-20);
+  --fill-control-pressed: rgb(from var(--color-sand) r g b / 0.031);
+  --fill-subtle:          transparent;
+  --fill-subtle-hover:    var(--ink-10);
+  --fill-subtle-pressed:  rgb(from var(--color-sand) r g b / 0.031);
+  --fill-layer:           rgb(from var(--color-sand) r g b / 0.04);
+  --fill-layer-alt:       rgb(from var(--color-sand) r g b / 0.02);
+
+  /* ── Stroke primitives ─────────────────────────────────────────────────── */
+  --stroke-control:  var(--hairline);
+  --stroke-surface:  var(--hairline-hi);
+  --stroke-divider:  var(--hairline);
+
+  /* ── Typography ────────────────────────────────────────────────────────── */
+  --font-ui:   'Inter Tight', system-ui, sans-serif;
+  --font-mono: 'JetBrains Mono', ui-monospace, monospace;
+
+  /* ── Geometry ──────────────────────────────────────────────────────────── */
+  --r-window:  14px;
+  --r-row:     10px;
+  --r-control: 8px;
+  --r-key:     6px;
+  --r-tag:     4px;
+
+  /* ── Legacy aliases ────────────────────────────────────────────────────── */
+  --text-primary:   var(--ink-100);
+  --text-secondary: var(--ink-80);
+  --text-tertiary:  var(--ink-60);
+  --text-disabled:  var(--ink-40);
+  --radius-control: var(--r-control);
+  --radius-overlay: var(--r-window);
+  --accent-light:   var(--accent-tint);
+}

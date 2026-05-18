@@ -7,7 +7,7 @@ defineProps<{
   loading?: boolean
 }>()
 defineEmits<{
-  (e: 'open', name: string): void
+  (e: 'open', name: string, remember: boolean): void
   (e: 'open-settings'): void
 }>()
 </script>
@@ -42,7 +42,7 @@ defineEmits<{
         :browser="browser"
         :shortcut="browserShortcut(idx)"
         :style="browserAnimationStyle(idx)"
-        @open="$emit('open', browser.Name)"
+        @open="(remember: boolean) => $emit('open', browser.Name, remember)"
       />
     </template>
   </div>

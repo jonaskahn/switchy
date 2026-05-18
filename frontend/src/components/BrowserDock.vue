@@ -6,7 +6,10 @@ defineProps<{
   browsers: Browser[]
   loading?: boolean
 }>()
-const emit = defineEmits<{ (e: 'open', name: string): void; (e: 'open-settings'): void }>()
+const emit = defineEmits<{
+  (e: 'open', name: string, remember: boolean): void
+  (e: 'open-settings'): void
+}>()
 </script>
 
 <template>
@@ -20,7 +23,7 @@ const emit = defineEmits<{ (e: 'open', name: string): void; (e: 'open-settings')
         :shortcut="browserShortcut(idx)"
         :focused="idx === 0"
         :animation-delay-ms="browserAnimationDelay(idx)"
-        @open="emit('open', browser.Name)"
+        @open="(remember: boolean) => emit('open', browser.Name, remember)"
       />
     </div>
     <div v-if="!loading && browsers.length > 0" class="dock-floor"></div>

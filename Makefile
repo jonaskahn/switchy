@@ -1,8 +1,12 @@
-.PHONY: build run dev format lint lint-fix
+.PHONY: build installer run dev format lint lint-fix
 
 # Build the Wails application for production
 build:
 	wails build
+
+# Build the Windows installer via Inno Setup (requires Inno Setup 6 at default path)
+installer:
+	powershell -ExecutionPolicy Bypass -File scripts\build.ps1
 
 # Build and run the production binary
 run: build

@@ -1,12 +1,46 @@
 import defaultThemeUrl from '@/themes/theme-default.css?url'
+import midnightThemeUrl from '@/themes/theme-midnight.css?url'
+import forestThemeUrl from '@/themes/theme-forest.css?url'
+import crimsonThemeUrl from '@/themes/theme-crimson.css?url'
+import auroraThemeUrl from '@/themes/theme-aurora.css?url'
+import glacierThemeUrl from '@/themes/theme-glacier.css?url'
+import emberThemeUrl from '@/themes/theme-ember.css?url'
+import sakuraThemeUrl from '@/themes/theme-sakura.css?url'
+import monochromeThemeUrl from '@/themes/theme-monochrome.css?url'
+import copperThemeUrl from '@/themes/theme-copper.css?url'
+import voidThemeUrl from '@/themes/theme-void.css?url'
+import oceanThemeUrl from '@/themes/theme-ocean.css?url'
 import acrylicAppUrl from '@/themes/appearance-acrylic.css?url'
 import micaAppUrl from '@/themes/appearance-mica.css?url'
 
 export type Appearance = 'acrylic' | 'mica'
-export type Theme = 'default'
+export type Theme =
+  | 'default'
+  | 'midnight'
+  | 'forest'
+  | 'crimson'
+  | 'aurora'
+  | 'glacier'
+  | 'ember'
+  | 'sakura'
+  | 'monochrome'
+  | 'copper'
+  | 'void'
+  | 'ocean'
 
 const THEME_URLS: Record<string, string> = {
   default: defaultThemeUrl,
+  midnight: midnightThemeUrl,
+  forest: forestThemeUrl,
+  crimson: crimsonThemeUrl,
+  aurora: auroraThemeUrl,
+  glacier: glacierThemeUrl,
+  ember: emberThemeUrl,
+  sakura: sakuraThemeUrl,
+  monochrome: monochromeThemeUrl,
+  copper: copperThemeUrl,
+  void: voidThemeUrl,
+  ocean: oceanThemeUrl,
 }
 
 const APPEARANCE_URLS: Record<string, string> = {

@@ -6,6 +6,7 @@ import {
   GetBrowsers,
   GetSettings,
   OpenWithBrowser,
+  RememberBrowserForDomain,
   CopyURL,
   DismissWindow,
   OpenSettings,
@@ -28,15 +29,20 @@ const FOOTER_HEIGHT_PX = 8
 const VERTICAL_WIDTH_PX = 420
 const VERTICAL_ROW_HEIGHT_PX = 65
 
-const SCREEN_CAP_RATIO = 0.80
+const SCREEN_CAP_RATIO = 0.8
 const COPY_FEEDBACK_DURATION_MS = 1500
 const TIMER_TICK_INTERVAL_MS = 100
 const TIMER_TICK_STEP = 0.1
+
+const NOTICE_DURATION_MS = 3000
 
 const currentUrl = ref('')
 const browsers = ref<Browser[]>([])
 const loading = ref(true)
 const copied = ref(false)
+const notice = ref('')
+const ctrlHeld = ref(false)
+let noticeTimer: ReturnType<typeof setTimeout> | null = null
 const timerActive = ref(false)
 const timerSecs = ref(0)
 const timerRemain = ref(0)
@@ -49,6 +55,14 @@ const browserZoneEl = ref<HTMLElement | null>(null)
 const urlStripEl = ref<InstanceType<typeof UrlCard> | null>(null)
 
 const timerDisplay = computed(() => timerRemain.value.toFixed(1) + 's')
+
+const displayHostname = computed(() => {
+  try {
+    return new URL(currentUrl.value).hostname || currentUrl.value
+  } catch {
+    return currentUrl.value
+  }
+})
 const timerBarScale = computed(() =>
   Math.max(0, Math.min(1, timerRemain.value / Math.max(timerSecs.value, 0.0001)))
 )
@@ -178,8 +192,25 @@ function stopTimer() {
   timerActive.value = false
 }
 
-async function openBrowser(name: string) {
+function showNotice(msg: string) {
+  if (noticeTimer) clearTimeout(noticeTimer)
+  notice.value = msg
+  noticeTimer = setTimeout(() => {
+    notice.value = ''
+    noticeTimer = null
+  }, NOTICE_DURATION_MS)
+}
+
+async function openBrowser(name: string, remember = false) {
   stopTimer()
+  if (remember) {
+    try {
+      const hostname = await RememberBrowserForDomain(name)
+      showNotice(`Remembered ${name} for ${hostname}`)
+    } catch {
+      showNotice('Cannot remember this URL type')
+    }
+  }
   await OpenWithBrowser(name)
 }
 
@@ -213,18 +244,40 @@ function onKeyDown(e: KeyboardEvent) {
     return
   }
   const idx = parseInt(e.key, 10) - 1
-  if (!isNaN(idx) && idx >= 0 && idx < browsers.value.length) openBrowser(browsers.value[idx].Name)
+  if (!isNaN(idx) && idx >= 0 && idx < browsers.value.length)
+    openBrowser(browsers.value[idx].Name, e.ctrlKey)
+}
+
+function onCtrlDown(e: KeyboardEvent) {
+  if (e.key === 'Control') ctrlHeld.value = true
+}
+function onCtrlUp(e: KeyboardEvent) {
+  if (e.key === 'Control') ctrlHeld.value = false
+}
+function onWindowBlur() {
+  ctrlHeld.value = false
+}
+function onMouseMove(e: MouseEvent) {
+  ctrlHeld.value = e.ctrlKey
 }
 
 onMounted(() => {
   load()
   window.addEventListener('keydown', onKeyDown)
+  window.addEventListener('keydown', onCtrlDown)
+  window.addEventListener('keyup', onCtrlUp)
+  window.addEventListener('blur', onWindowBlur)
+  window.addEventListener('mousemove', onMouseMove)
   EventsOn('url:new', (url: string) => {
     currentUrl.value = url
   })
 })
 onUnmounted(() => {
   window.removeEventListener('keydown', onKeyDown)
+  window.removeEventListener('keydown', onCtrlDown)
+  window.removeEventListener('keyup', onCtrlUp)
+  window.removeEventListener('blur', onWindowBlur)
+  window.removeEventListener('mousemove', onMouseMove)
   stopTimer()
 })
 </script>
@@ -235,15 +288,29 @@ onUnmounted(() => {
     <template v-if="selectorLayout === 'vertical'">
       <UrlCard ref="urlStripEl" :url="currentUrl" :copied="copied" @copy="copyUrl" />
       <div ref="browserZoneEl" :class="browserZoneClass">
-        <BrowserList :browsers="browsers" :loading="loading" @open="openBrowser" />
+        <BrowserList
+          :browsers="browsers"
+          :loading="loading"
+          @open="(name: string, remember: boolean) => openBrowser(name, remember)"
+        />
       </div>
     </template>
 
     <template v-else>
       <div ref="browserZoneEl" :class="browserZoneClass">
-        <BrowserDock :browsers="browsers" :loading="loading" @open="openBrowser" />
+        <BrowserDock
+          :browsers="browsers"
+          :loading="loading"
+          @open="(name: string, remember: boolean) => openBrowser(name, remember)"
+        />
       </div>
-      <UrlCard ref="urlStripEl" :url="currentUrl" :copied="copied" :compact="true" @copy="copyUrl" />
+      <UrlCard
+        ref="urlStripEl"
+        :url="currentUrl"
+        :copied="copied"
+        :compact="true"
+        @copy="copyUrl"
+      />
     </template>
 
     <div class="footer" :class="{ 'footer--horizontal': selectorLayout === 'horizontal' }">
@@ -262,8 +329,19 @@ onUnmounted(() => {
         </div>
 
         <div class="footer-hints no-drag">
-          <span class="hint"><kbd>C</kbd> Copy</span>
-          <span class="hint"><kbd>Esc</kbd> Close</span>
+          <template v-if="notice">
+            <span class="hint hint--notice">{{ notice }}</span>
+          </template>
+          <template v-else-if="ctrlHeld">
+            <span class="hint hint--ctrl"
+              ><kbd>Ctrl</kbd> held — click to remember for {{ displayHostname }}</span
+            >
+          </template>
+          <template v-else>
+            <span class="hint"><kbd>Ctrl</kbd> Remember</span>
+            <span class="hint"><kbd>C</kbd> Copy</span>
+            <span class="hint"><kbd>Esc</kbd> Close</span>
+          </template>
         </div>
 
         <div class="footer-trailing no-drag">
@@ -492,6 +570,15 @@ onUnmounted(() => {
 }
 .footer--horizontal .hint kbd {
   font-size: 9.5px;
+}
+.hint--notice {
+  color: var(--accent);
+  font-weight: 600;
+  letter-spacing: 0.01em;
+}
+.hint--ctrl {
+  color: var(--ink-80);
+  font-style: italic;
 }
 .timer-dot {
   display: inline-block;

@@ -20,6 +20,8 @@ import (
 //go:embed all:frontend/dist
 var assets embed.FS
 
+var appVersion = "1.0.1"
+
 const (
 	selectorFallbackWidth  = 580
 	selectorFallbackHeight = 420

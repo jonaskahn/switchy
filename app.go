@@ -48,7 +48,8 @@ func (a *App) setCurrentURL(url string) {
 	a.rawURL = url
 }
 
-func (a *App) GetMode() string { return a.mode }
+func (a *App) GetMode() string    { return a.mode }
+func (a *App) GetVersion() string { return appVersion }
 
 func (a *App) GetSettings() (*config.UserSettings, error) {
 	s, err := config.Load()

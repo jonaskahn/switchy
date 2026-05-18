@@ -6,7 +6,10 @@ defineProps<{
   browsers: Browser[]
   loading?: boolean
 }>()
-const emit = defineEmits<{ (e: 'open', name: string, remember: boolean): void; (e: 'open-settings'): void }>()
+const emit = defineEmits<{
+  (e: 'open', name: string, remember: boolean): void
+  (e: 'open-settings'): void
+}>()
 </script>
 
 <template>

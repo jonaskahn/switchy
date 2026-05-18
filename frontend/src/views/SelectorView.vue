@@ -29,7 +29,7 @@ const FOOTER_HEIGHT_PX = 8
 const VERTICAL_WIDTH_PX = 420
 const VERTICAL_ROW_HEIGHT_PX = 65
 
-const SCREEN_CAP_RATIO = 0.80
+const SCREEN_CAP_RATIO = 0.8
 const COPY_FEEDBACK_DURATION_MS = 1500
 const TIMER_TICK_INTERVAL_MS = 100
 const TIMER_TICK_STEP = 0.1
@@ -304,7 +304,13 @@ onUnmounted(() => {
           @open="(name: string, remember: boolean) => openBrowser(name, remember)"
         />
       </div>
-      <UrlCard ref="urlStripEl" :url="currentUrl" :copied="copied" :compact="true" @copy="copyUrl" />
+      <UrlCard
+        ref="urlStripEl"
+        :url="currentUrl"
+        :copied="copied"
+        :compact="true"
+        @copy="copyUrl"
+      />
     </template>
 
     <div class="footer" :class="{ 'footer--horizontal': selectorLayout === 'horizontal' }">
@@ -327,7 +333,9 @@ onUnmounted(() => {
             <span class="hint hint--notice">{{ notice }}</span>
           </template>
           <template v-else-if="ctrlHeld">
-            <span class="hint hint--ctrl"><kbd>Ctrl</kbd> held — click to remember for {{ displayHostname }}</span>
+            <span class="hint hint--ctrl"
+              ><kbd>Ctrl</kbd> held — click to remember for {{ displayHostname }}</span
+            >
           </template>
           <template v-else>
             <span class="hint"><kbd>Ctrl</kbd> Remember</span>

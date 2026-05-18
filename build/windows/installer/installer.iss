@@ -4,8 +4,8 @@
 
 #define MyAppName "Switchy"
 #define NameSmall "switchy"
-#define MyAppVersion "1.0.0"
-#define MyAppPublisher "ifelse.one"
+#define MyAppVersion "1.0.1"
+#define MyAppPublisher "jonaskahn"
 #define MyAppURL "https://github.com/jonaskahn/switchy"
 #define ExeName "switchy.exe"
 #define AppDescription "Choose which browser opens your links"
@@ -42,6 +42,10 @@ SetupLogging=yes
 
 [Languages]
 Name: "english"; MessagesFile: "compiler:Default.isl"
+
+[Messages]
+SetupWindowTitle=Setup - {#MyAppName}
+UninstallAppFullTitle={#MyAppName}
 
 [Tasks]
 Name: "desktopicon"; Description: "{cm:CreateDesktopIcon}"; GroupDescription: "{cm:AdditionalIcons}"
